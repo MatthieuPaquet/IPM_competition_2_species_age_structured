@@ -29,11 +29,11 @@ betas=matrix(c(0.1, 0.06, 0.06, 0.1),ncol = 2, byrow = TRUE)
     }
   }
 }
-#Initial population size
-N1jt1 <- 25
-N1at1 <- 25
-N2jt1 <- 25
-N2at1 <- 25
+#Initial population sizes
+N1jt1 <- N1jinit <- 100
+N1at1 <- N1ainit <- 100
+N2jt1 <- N2jinit <- 100
+N2at1 <- N2ainit <- 100
 #sample sizes
 nyears <- 30
 nmarked <- 100
@@ -63,24 +63,28 @@ coexcode  <-  nimbleCode({
     N2[t] <- N2j[t] + N2a[t]
   }#t
   ###demographic stochasticity for the population level parameters
-  ##check with FB if we want to include it or not
   for (t in 2:nyears) {
     #reminder: maturation rate =1 so this was simplified
-    N1a[t] ~ dbin(s1a, N1[t-1])
-    N2a[t] ~ dbin(s2a, N2[t-1])
+    N1a[t] <- N1aold[t]+N1anew[t]
+    N2a[t] <- N2aold[t]+N2anew[t]
+    #old vs new adults
+    N1aold[t] ~ dbin(s1a, N1a[t-1])
+    N2aold[t] ~ dbin(s2a, N2a[t-1])
+    N1anew[t] ~ dbin(svar1[t-1], N1j[t-1])
+    N2anew[t] ~ dbin(svar2[t-1], N2j[t-1])
     #sub adults 
-    N1j[t] ~ dpois(svar1[t-1] * fledg.rate.1[t-1] * N1a[t-1])
-    N2j[t] ~ dpois(svar2[t-1] * fledg.rate.2[t-1] * N2a[t-1]) 
+    N1j[t] ~ dpois(fledg.rate.1[t-1] * N1a[t-1])
+    N2j[t] ~ dpois(fledg.rate.2[t-1] * N2a[t-1]) 
   }#t
   #initial population size equals observed initial population size
   N1a[1] <- round(N1at1) 
   N2a[1] <- round(N2at1)
   N1j[1] <- round(N1jt1) 
   N2j[1] <- round(N2jt1)
-  N1at1 ~ T(dnorm(25, 0.01), 0, )
-  N2at1 ~ T(dnorm(25, 0.01), 0, )
-  N1jt1 ~ T(dnorm(25, 0.01), 0, )
-  N2jt1 ~ T(dnorm(25, 0.01), 0, )
+  N1at1 ~ T(dnorm(N1ainit, 0.01), 0, )
+  N2at1 ~ T(dnorm(N2ainit, 0.01), 0, )
+  N1jt1 ~ T(dnorm(N1jinit, 0.01), 0, )
+  N2jt1 ~ T(dnorm(N2jinit, 0.01), 0, )
   #likelihood for productivity data
   for (t in 1:nyears) {
     fledg1obs[t] ~ dpois(fledg.sample.1[t] * fledg.rate.1[t] * 2) #*2 as both sexes
@@ -241,7 +245,8 @@ coexconstants <- list(nyears=nyears,
                     r1j=r1j[nyears.start:(nyears.start+nyears-2)],
                     r2j=r2j[nyears.start:(nyears.start+nyears-2)],
                     fledg.sample.2=fledg.sample.2[nyears.start:(nyears.start+nyears-1)],
-                    fledg.sample.1=fledg.sample.1[nyears.start:(nyears.start+nyears-1)])
+                    fledg.sample.1=fledg.sample.1[nyears.start:(nyears.start+nyears-1)],
+                    N1jinit=N1jinit, N2ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
 coexdata <- list(marray1j=marray1j,N1obs=N1obs,fledg1obs=fledg1obs,
                marray2j=marray2j,N2obs=N2obs,fledg2obs=fledg2obs)
 #Build the model for the IPM
