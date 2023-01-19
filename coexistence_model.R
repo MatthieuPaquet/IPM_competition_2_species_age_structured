@@ -2,6 +2,7 @@
 #we decide to fix the maturation rate gamma=1 for both species for simplicity, and because in practice probably few real systems would use such configuration
 ##built from Paquet&Barraquand 2023 code of a predator-prey model, so check carefully for mistakes.
 #here we consider the same sample size as for the previous prey species (higher sample size).
+setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(nimble)
 library(mcmcplots)
 parameterset <- 1
@@ -246,7 +247,7 @@ coexconstants <- list(nyears=nyears,
                     r2j=r2j[nyears.start:(nyears.start+nyears-2)],
                     fledg.sample.2=fledg.sample.2[nyears.start:(nyears.start+nyears-1)],
                     fledg.sample.1=fledg.sample.1[nyears.start:(nyears.start+nyears-1)],
-                    N1jinit=N1jinit, N2ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
+                    N1jinit=N1jinit, N1ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
 coexdata <- list(marray1j=marray1j,N1obs=N1obs,fledg1obs=fledg1obs,
                marray2j=marray2j,N2obs=N2obs,fledg2obs=fledg2obs)
 #Build the model for the IPM
