@@ -1,8 +1,11 @@
+setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(coda)
 library(viridis)
 library("scatterplot3d") 
-load(file="samples_coexistence_model.Rdata")
-load(file="simul_coexistence_model.Rdata")
+load(file="samples_coexistence_model_param3_pospriors.Rdata")
+load(file="simul_coexistence_model_param3_pospriors.Rdata")
+#parameter set
+parameterset <- 3
 n.simul <- length(list.samples)
 n.param <- dim(list.samples[[1]]$chain1)[2]
 n.years <- length(list.simul[[1]]$N1)
@@ -164,8 +167,7 @@ for (i in 1:n.simul) {
 }
 N1a <- seq(0,max(N1asimul),length=n.n) #density index adults species1
 N2a <- seq(0,max(N2asimul),length=n.n) #density index adults species2
-#parameter set
-parameterset <- 1
+
 #adapted from first parameter set in Bardon&Barraquand
 fert1=30
 fert2=25
@@ -187,6 +189,11 @@ if (parameterset == 1) {
     if (parameterset == 3) {
       alphs=matrix(c(0.1, 0.043, 0.035, 0.1),ncol = 2, byrow = TRUE)
       betas=matrix(c(0.1, 0.155, 0.165, 0.1),ncol = 2, byrow = TRUE)
+    } else {
+      if (parameterset == 4) {
+        alphs=matrix(c(0.1, 0.1, 0.1, 0.1),ncol = 2, byrow = TRUE)
+        betas=matrix(c(0.1, 0.1, 0.1, 0.1),ncol = 2, byrow = TRUE)
+      }
     }
   }
 }
@@ -199,7 +206,7 @@ surv2a[,i] <- phi2/(1+betas[2,1] * N1a + betas[2,2] * N2a[i])
 fec1[,i] <- fert1 / (1+alphs[1,1] * N1a + alphs[1,2] * N2a[i])
 fec2[,i] <- fert2 / (1+ alphs[2,1] * N1a + alphs[2,2] * N2a[i])
 }#i
-par(mfrow=c(2,2))
+par(mfrow=c(2,2),mar=c(1.4, 0, 0, 0))
 persp(z = surv1a,x=N1a,y=N2a,xlab="N1a",ylab="N2a",zlab="Survival species 1",
         zlim=c(0,1),theta = 60,ticktype="detailed")
 persp(z = surv2a,x=N1a,y=N2a,xlab="N1a",ylab="N2a",zlab="Survival species 2",
@@ -208,3 +215,88 @@ persp(z = fec1,x=N1a,y=N2a,xlab="N1a",ylab="N2a",zlab="Fecundity species 1",
       zlim=c(0,40),theta = 60,ticktype="detailed")
 persp(z = fec2,x=N1a,y=N2a,xlab="N1a",ylab="N2a",zlab="Fecundity species 2",
       zlim=c(0,40),theta = 60,ticktype="detailed")
+##computation of juvenile survival and fecundity at equilibriums abundances
+#Will be later used to define intercepts of "phenomenological" models with abundances centered
+#adapted from code in Bardon and Barraquand
+#get equilibriums numerically
+#3. Creating vectors
+years <- 3000
+N1jdet<-rep(NA,years+1)
+N2jdet<-rep(NA,years+1)
+N1adet<-rep(NA,years+1)
+N2adet<-rep(NA,years+1)
+svar1jdet<-rep(NA,years+1)
+svar2jdet<-rep(NA,years+1)
+#4. INITIALIZATION
+N0 <- 100
+  N1jdet[1] <-N0
+  N1adet[1] <-N0
+  N2jdet[1] <-N0
+  N2adet[1] <-N0
+for (t in 1:years){
+    svar1jdet[t] <- phi1/(1+betas[1,1]*N1adet[t]+betas[1,2]*N2adet[t])
+    svar2jdet[t] <- phi2/(1+betas[2,1]*N1adet[t]+betas[2,2]*N2adet[t]) 
+    N1jdet[t+1]<- fert1/(1+alphs[1,1]*N1adet[t]+alphs[1,2]*N2adet[t])*N1adet[t]
+    N2jdet[t+1]<- fert2/(1+alphs[2,2]*N2adet[t]+alphs[2,1]*N1adet[t])*N2adet[t]
+    N1adet[t+1]<-svar1jdet[t]*N1jdet[t]+s1a*N1adet[t] 
+    N2adet[t+1]<-svar2jdet[t]*N2jdet[t]+s2a*N2adet[t]
+}#t
+N1astar <- N1adet[years+1]
+N2astar <- N2adet[years+1]
+surv1star <- phi1 / (1+betas[1,1] * N1astar + betas[1,2] * N2astar)
+surv2star <- phi2 / (1+betas[2,1] * N1astar + betas[2,2] * N2astar)
+fec1star <- fert1 / (1+alphs[1,1] * N1astar + alphs[1,2] * N2astar)
+fec2star <- fert2 / (1+alphs[2,2] * N2astar + alphs[2,1] * N1astar)
+###WORK IN PROGRESS
+# CALCULATE THE INVASION CRITERIAS FROM THE TRUE PARAMETER VALUES
+#note that since gamma (stage transition probability) is set to 1, C=0
+D1 <- (fert1 * phi1) / (1 - s1a)
+D2 <- (fert2 * phi2) / (1 - s2a)
+n1astarsingle <- ((- alphs[1,1] - betas[1,1]) + sqrt( (alphs[1,1] + betas[1,1])^2 -
+                                                     4 * alphs[1,1] * betas[1,1] *
+                                                     (-D1 +1))) / (2 * alphs[1,1] * betas[1,1])
+n2astarsingle <- ((- alphs[2,2] - betas[2,2]) + sqrt( (alphs[2,2] + betas[2,2])^2 -
+                                                      4 * alphs[2,2] * betas[2,2] *
+                                                      (-D2 +1))) / (2 * alphs[2,2] * betas[2,2])
+inv1 <- D2 / ((1 + betas[1,2] * n2astarsingle) * (1 + alphs[1,2] * n2astarsingle))
+inv2 <- D2 / ((1 + betas[2,1] * n1astarsingle) * (1 + alphs[2,1] * n1astarsingle))
+#estimate invasion criteria
+D1est <- (fert1est * phi1est) / (1 - s1aest)
+D2est <- (fert2est * phi2est) / (1 - s2aest)
+n1astarsingleest <- ((- alphs11est - betas11est) + sqrt( (alphs11est + betas11est)^2 -
+                                                        4 * alphs11est * betas11est *
+                                                        (-D1est +1))) / (2 * alphs11est * betas11est)
+n2astarsingleest <- ((- alphs22est - betas22est) + sqrt( (alphs22est + betas22est)^2 -
+                                                           4 * alphs22est * betas22est *
+                                                           (-D2est +1))) / (2 * alphs22est * betas22est)
+inv1est <- D1est / ((1 + betas12est * n2astarsingleest) * (1 + alphs12est * n2astarsingleest))
+inv2est <- D2est / ((1 + betas21est * n1astarsingleest) * (1 + alphs21est * n1astarsingleest))
+#traceplots of estimated invasion criteria
+for (i in 1:n.simul.conv) {
+  par(mfrow=c(2,1))
+  plot(inv1est[i,c(1:(dim(inv1est)[2]/2))],type="l")
+  points(inv1est[i,c(((dim(inv1est)[2]/2)+1):dim(inv1est)[2])],type="l",col="red")
+ abline(h=inv1,col="green")
+   plot(inv2est[i,c(1:(dim(inv2est)[2]/2))],type="l")
+  points(inv2est[i,c(((dim(inv2est)[2]/2)+1):dim(inv2est)[2])],type="l",col="red")
+  abline(h=inv2,col="green")
+  }#i
+##some prior posterior overlaps
+#set values for lognormal priors to be defined as constants
+sdprior <- 0.5
+#supposed max observed value, used as prior mean on the log scale, is at expected fertility when N=1
+fledgrate1Neq1 <- fert1 / (1+alphs[1,1])
+fledgrate2Neq1 <- fert2 / (1+alphs[2,2])
+#prior parameters
+fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
+fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
+alphsprior <- log(alphs) -(sdprior^2 / 2)
+betasprior <- log(betas) -(sdprior^2 / 2)
+set.seed(1)
+plot.new()
+plot(density(fert1est[1,]))
+lines(density(rlnorm(3000,fert1priormode, sd=sdprior)))
+abline(v=fert1)
+plot(density(fert2est[1,]))
+lines(density(rlnorm(3000,fert2priormode, sd=sdprior)))
+abline(v=fert2)

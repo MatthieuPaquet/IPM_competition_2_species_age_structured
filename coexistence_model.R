@@ -5,7 +5,7 @@
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(nimble)
 library(mcmcplots)
-parameterset <- 1
+parameterset <- 3
 #adapted from first parameter set in Bardon&Barraquand
 fert1=30
 fert2=25
@@ -17,8 +17,8 @@ s2a=0.6
 p1=0.7
 p2=0.7
 if (parameterset == 1) {
-alphs=matrix(c(0.1, 0.05, 0.06, 0.1),ncol = 2, byrow = TRUE)
-betas=matrix(c(0.1, 0.06, 0.06, 0.1),ncol = 2, byrow = TRUE)
+  alphs=matrix(c(0.1, 0.05, 0.06, 0.1),ncol = 2, byrow = TRUE)
+  betas=matrix(c(0.1, 0.06, 0.06, 0.1),ncol = 2, byrow = TRUE)
 } else {
   if (parameterset == 2) {
     alphs=matrix(c(0.1, 0.02, 0.112, 0.1),ncol = 2, byrow = TRUE)
@@ -27,7 +27,12 @@ betas=matrix(c(0.1, 0.06, 0.06, 0.1),ncol = 2, byrow = TRUE)
     if (parameterset == 3) {
       alphs=matrix(c(0.1, 0.043, 0.035, 0.1),ncol = 2, byrow = TRUE)
       betas=matrix(c(0.1, 0.155, 0.165, 0.1),ncol = 2, byrow = TRUE)
-    }
+    } else {
+      if (parameterset == 4) {
+        alphs=matrix(c(0.1, 0.1, 0.1, 0.1),ncol = 2, byrow = TRUE)
+        betas=matrix(c(0.1, 0.1, 0.1, 0.1),ncol = 2, byrow = TRUE)
+      }
+  }
   }
 }
 #Initial population sizes
@@ -92,14 +97,13 @@ coexcode  <-  nimbleCode({
     fledg2obs[t] ~ dpois(fledg.sample.2[t] * fledg.rate.2[t] * 2)
     ##dd intra and inter on fledgling rate
     fledg.rate.1[t] <- fert1 / (1+alphs[1,1] * N1a[t] +
-                                     alphs[1,2] * N2a[t] )
+                                  alphs[1,2] * N2a[t] )
     fledg.rate.2[t] <- fert2 / (1+alphs[2,2] * N2a[t] + 
-                                       alphs[2,1] * N1a[t])
-#see later if we need to center the abundances
+                                  alphs[2,1] * N1a[t])
   }#t
   #think about the priors
-  fert1 ~ dunif(1,100) #should we put a prior on the log?
-  fert2 ~ dunif(1,100)
+  fert1 ~ dlnorm(fert1priormode, sd=sdprior)
+  fert2 ~ dlnorm(fert2priormode, sd=sdprior)
   #Likelihood for capture-recapture data: CJS model (2 age classes)
   # Multinomial likelihood
   for (t in 1:(nyears-1)) {
@@ -131,39 +135,39 @@ coexcode  <-  nimbleCode({
   s2a ~ dunif(0,1)
   #relationship for vital rate parameters
   for (t in 1:(nyears-1)) {
-        #interspecific dd on juvenile prey survival
-        svar1[t] <- phi1/(1+betas[1,1]*N1a[t]+betas[1,2]*N2a[t])
-        svar2[t] <- phi2/(1+betas[2,1]*N1a[t]+betas[2,2]*N2a[t])
+    #interspecific dd on juvenile prey survival
+    svar1[t] <- phi1 / (1 + betas[1,1] * N1a[t] + betas[1,2] * N2a[t])
+    svar2[t] <- phi2 / (1 + betas[2,1] * N1a[t] + betas[2,2] * N2a[t])
   }#t
-    phi1 ~ dunif(0,1)
-    phi2 ~ dunif(0,1)
-    #think about priors
-    for (a in 1:2) {
-      for (b in 1:2) {
-        alphs[a,b] ~ dnorm(0,1)
-        betas[a,b] ~ dnorm(0,1)
-      }#b
-    }#a
+  phi1 ~ dunif(0,1) #shall we change these priors too?
+  phi2 ~ dunif(0,1)
+  #think about priors
+  for (a in 1:2) {
+    for (b in 1:2) {
+      alphs[a,b] ~ dlnorm(alphsprior[a,b], sd=sdprior)
+      betas[a,b] ~ dlnorm(betasprior[a,b], sd=sdprior)
+    }#b
+  }#a
   
 })
 #change abundances at equilibrium
 coexconstants  <-  list(nyears=nyears, r1j=r1j, r2j=r2j, 
-                      fledg.sample.2=fledg.sample.2, fledg.sample.1=fledg.sample.1)
+                        fledg.sample.2=fledg.sample.2, fledg.sample.1=fledg.sample.1)
 #Build the model
 coexmodel  <-  nimbleModel(coexcode,
-                         constants = coexconstants)
+                           constants = coexconstants)
 #Set data and initial values
 coexmodel$setData(list(marray1j=marray1j, N1obs=N1obs, 
-                     fledg1obs=fledg1obs, marray2j=marray2j,
-                     N2obs=N2obs, fledg2obs=fledg2obs))
+                       fledg1obs=fledg1obs, marray2j=marray2j,
+                       N2obs=N2obs, fledg2obs=fledg2obs))
 coexinits <- list(fert1=fert1,fert2=fert2,phi1=phi1,phi2=phi2,s1a=s1a,s2a=s2a,
-                alphs=alphs, betas=betas,
-                p1=p1, p2=p2, N1jt1=N1jt1, N2jt1=N2jt1, 
-                N1at1=N1at1, N2at1=N2at1)
+                  alphs=alphs, betas=betas,
+                  p1=p1, p2=p2, N1jt1=N1jt1, N2jt1=N2jt1, 
+                  N1at1=N1at1, N2at1=N2at1)
 nodesToSim  <-  coexmodel$getDependencies(c("alphs","betas","p1","p2","phi1",
-                                              "phi2","fert1","fert2",
-                                              "N1jt1","N2jt1","N1at1","N2at1"),
-                                            self = F, downstream = T)
+                                            "phi2","fert1","fert2",
+                                            "N1jt1","N2jt1","N1at1","N2at1"),
+                                          self = F, downstream = T)
 coexmodel$setInits(coexinits)
 #Compile the model 
 ccoexmodel <- compileNimble(coexmodel) 
@@ -171,7 +175,10 @@ ccoexmodel <- compileNimble(coexmodel)
 list.simul <- list()
 ###simulate 100 datasets and run IPM on each
 for (i in 1:100) {
-  set.seed(i)
+###avoid one population getting extinct with parameter set 3 by changing seed
+  if(parameterset == 3) {
+    set.seed(i+18)} else {
+      set.seed(i)}
   ccoexmodel$simulate(nodesToSim)
   list.simul[[i]] <- list(N1j=ccoexmodel$N1j,N1a=ccoexmodel$N1a,
                           N2j=ccoexmodel$N2j,N2a=ccoexmodel$N2a,
@@ -186,7 +193,21 @@ for (i in 1:100) {
                           marray2j=ccoexmodel$marray2j)
   print(i)  
 }
-save(list.simul, file="simul_coexistence_model.Rdata")
+if (parameterset == 1) {
+  save(list.simul, file = "simul_coexistence_model_param1_pospriors.Rdata")
+} else {
+  if (parameterset == 2) {
+    save(list.simul, file = "simul_coexistence_model_param2_pospriors.Rdata")
+  } else {
+    if (parameterset == 3) {
+      save(list.simul, file = "simul_coexistence_model_param3_pospriors.Rdata")
+    } else {
+      if (parameterset == 4) {
+        save(list.simul, file = "simul_coexistence_model_param4_pospriors.Rdata")
+      }
+    }
+  }
+}
 #this code bit is just to check that all populations persist
 #until the end of the time series and check the mean pop size then
 nyears.tot <- length(list.simul[[1]][[1]])
@@ -230,29 +251,43 @@ for (i in 1) {
   marray1j <- matrix(NA,(nyears-1),nyears)
   marray2j <- matrix(NA,(nyears-1),nyears)
   marray1j[1:(nyears-1),1:(nyears-1)] <- list.simul[[i]]$marray1j[nyears.start:(nyears.start + nyears-2),
-                                                                      nyears.start:(nyears.start + nyears-2)]
+                                                                  nyears.start:(nyears.start + nyears-2)]
   marray1j[,nyears] <- list.simul[[i]]$marray1j[nyears.start:(nyears.start + nyears-2),
-                                                    (nyears.start + nyears-1):dim(list.simul[[i]]$marray1j)[2]]
+                                                (nyears.start + nyears-1):dim(list.simul[[i]]$marray1j)[2]]
   marray2j[1:(nyears-1),1:(nyears-1)] <- list.simul[[i]]$marray2j[nyears.start:(nyears.start + nyears-2),
-                                                                      nyears.start:(nyears.start + nyears-2)]
+                                                                  nyears.start:(nyears.start + nyears-2)]
   marray2j[,nyears] <- list.simul[[i]]$marray2j[nyears.start:(nyears.start + nyears-2),
-                                                    (nyears.start + nyears-1):dim(list.simul[[i]]$marray2j)[2]]
+                                                (nyears.start + nyears-1):dim(list.simul[[i]]$marray2j)[2]]
   N1obs <- list.simul[[i]]$N1obs[nyears.start:(nyears.start + nyears-1)]
   fledg1obs <- list.simul[[i]]$fledg1obs[nyears.start:(nyears.start + nyears-1)]
   N2obs <- list.simul[[i]]$N2obs[nyears.start:(nyears.start + nyears-1)]
   fledg2obs <- list.simul[[i]]$fledg2obs[nyears.start:(nyears.start + nyears-1)]
 }
+#set values for lognormal priors to be defined as constants
+sdprior <- 0.5
+#supposed max observed value, used as prior mean on the log scale, is at expected fertility when N=1
+fledgrate1Neq1 <- fert1 / (1+alphs[1,1])
+fledgrate2Neq1 <- fert2 / (1+alphs[2,2])
+#prior parameters
+fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
+fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
+alphsprior <- log(alphs) -(sdprior^2 / 2)
+betasprior <- log(betas) -(sdprior^2 / 2)
+#set model constants
 coexconstants <- list(nyears=nyears,
-                    r1j=r1j[nyears.start:(nyears.start+nyears-2)],
-                    r2j=r2j[nyears.start:(nyears.start+nyears-2)],
-                    fledg.sample.2=fledg.sample.2[nyears.start:(nyears.start+nyears-1)],
-                    fledg.sample.1=fledg.sample.1[nyears.start:(nyears.start+nyears-1)],
-                    N1jinit=N1jinit, N1ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
+                      r1j=r1j[nyears.start:(nyears.start+nyears-2)],
+                      r2j=r2j[nyears.start:(nyears.start+nyears-2)],
+                      fledg.sample.2=fledg.sample.2[nyears.start:(nyears.start+nyears-1)],
+                      fledg.sample.1=fledg.sample.1[nyears.start:(nyears.start+nyears-1)],
+                      sdprior=sdprior,
+                      fert1priormode=fert1priormode, fert2priormode=fert2priormode,
+                      alphsprior=alphsprior,betasprior=betasprior,
+                      N1jinit=N1jinit, N1ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
 coexdata <- list(marray1j=marray1j,N1obs=N1obs,fledg1obs=fledg1obs,
-               marray2j=marray2j,N2obs=N2obs,fledg2obs=fledg2obs)
+                 marray2j=marray2j,N2obs=N2obs,fledg2obs=fledg2obs)
 #Build the model for the IPM
 coexmodelIPM  <-  nimbleModel(coexcode,
-                            constants = coexconstants,data=coexdata,inits = coexinits)
+                              constants = coexconstants,data=coexdata,inits = coexinits)
 #compile model for IPM
 ccoexmodelIPM  <-  compileNimble(coexmodelIPM) 
 #configure the MCMC
@@ -265,20 +300,20 @@ coexmcmcConf  <-  configureMCMC(ccoexmodelIPM,monitors=c("alphs","betas","p1","p
                                                          "N1jt1","N2jt1","N1at1","N2at1","N1j","N1a","N2j","N2a"))
 ###block samplers
 coexmcmcConf$removeSamplers(c("alphs","betas","phi1","phi2","fert1","fert2"))
-  # Add RW_block samplers, modifying adaptation behavior.
-  coexmcmcConf$addSampler(target = c('fert1','alphs[1,1]','alphs[1,2]'),
+# Add RW_block samplers, modifying adaptation behavior.
+coexmcmcConf$addSampler(target = c('fert1','alphs[1,1]','alphs[1,2]'),
+                        type = "AF_slice",
+                       control = list(sliceAdaptFactorInterval = 20))
+coexmcmcConf$addSampler(target = c('fert2','alphs[2,2]','alphs[2,1]'),
                         type = "AF_slice",
                         control = list(sliceAdaptFactorInterval = 20))
-  coexmcmcConf$addSampler(target = c('fert2','alphs[2,2]','alphs[2,1]'),
+coexmcmcConf$addSampler(target = c('phi1','betas[1,1]','betas[1,2]'),
                         type = "AF_slice",
                         control = list(sliceAdaptFactorInterval = 20))
-  coexmcmcConf$addSampler(target = c('phi1','betas[1,1]','betas[1,2]'),
+coexmcmcConf$addSampler(target = c('phi2','betas[2,2]','betas[2,1]'),
                         type = "AF_slice",
                         control = list(sliceAdaptFactorInterval = 20))
-  coexmcmcConf$addSampler(target = c('phi2','betas[2,2]','betas[2,1]'),
-                        type = "AF_slice",
-                        control = list(sliceAdaptFactorInterval = 20))
-  #Build the MCMC
+#Build the MCMC
 coexmcmc  <-  buildMCMC(coexmcmcConf)
 #Compile the  MCMC
 ccoexmcmc  <-  compileNimble(coexmcmc, project = ccoexmodelIPM)
@@ -286,7 +321,21 @@ ccoexmcmc  <-  compileNimble(coexmcmc, project = ccoexmodelIPM)
 #change niter and burn in for final versions if necessary
 list.samples[[1]] <- runMCMC(ccoexmcmc,niter=30100,nburnin=100,thin=20,nchains=2,setSeed=T)
 ##save posterior samples
-save(list.samples, file="samples_coexistence_model.Rdata")
+if (parameterset == 1) {
+  save(list.samples, file = "samples_coexistence_model_param1_pospriors.Rdata")
+} else {
+  if (parameterset == 2) {
+    save(list.samples, file = "samples_coexistence_model_param2_pospriors.Rdata")
+  } else {
+    if (parameterset == 3) {
+      save(list.samples, file = "samples_coexistence_model_param3_pospriors.Rdata")
+    } else {
+      if (parameterset == 4) {
+        save(list.samples, file = "samples_coexistence_model_param4_pospriors.Rdata")
+      }
+    }
+  }
+}
 for (i in 2:100) {
   #set simulated data as data
   #start from the 21st year
@@ -305,7 +354,7 @@ for (i in 2:100) {
   N2obs <- list.simul[[i]]$N2obs[nyears.start:(nyears.start + nyears-1)]
   fledg2obs <- list.simul[[i]]$fledg2obs[nyears.start:(nyears.start + nyears-1)]
   coexdata <- list(marray1j=marray1j,N1obs=N1obs,fledg1obs=fledg1obs,
-                 marray2j=marray2j,N2obs=N2obs,fledg2obs=fledg2obs)
+                   marray2j=marray2j,N2obs=N2obs,fledg2obs=fledg2obs)
   #set data
   ccoexmodelIPM$setData(coexdata)
   ccoexmodelIPM$setInits(coexinits)
@@ -313,6 +362,20 @@ for (i in 2:100) {
   #change niter and burn in for final versions if necessary
   list.samples[[i]] <- runMCMC(ccoexmcmc,niter=30100,nburnin=100,thin=20,nchains=2,setSeed=T)
   ##save posterior samples
-  save(list.samples, file="samples_coexistence_model.Rdata")
+  if (parameterset == 1) {
+    save(list.samples, file = "samples_coexistence_model_param1_pospriors.Rdata")
+  } else {
+    if (parameterset == 2) {
+      save(list.samples, file = "samples_coexistence_model_param2_pospriors.Rdata")
+    } else {
+      if (parameterset == 3) {
+        save(list.samples, file = "samples_coexistence_model_param3_pospriors.Rdata")
+      } else {
+        if (parameterset == 4) {
+          save(list.samples, file = "samples_coexistence_model_param4_pospriors.Rdata")
+        }
+      }
+    }
+  }
   print(i)
 }
