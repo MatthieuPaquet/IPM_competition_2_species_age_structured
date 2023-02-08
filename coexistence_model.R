@@ -5,17 +5,17 @@
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(nimble)
 library(mcmcplots)
-parameterset <- 4
+parameterset <- 3
 #adapted from first parameter set in Bardon&Barraquand
-fert1=30
-fert2=25
-phi1=0.5
-phi2=0.4
-s1a=0.5
-s2a=0.6
+fert1 <- 30
+fert2 <- 25
+phi1 <- 0.5
+phi2 <- 0.4
+s1a <- 0.5
+s2a <- 0.6
 #recapture probabilities
-p1=0.7
-p2=0.7
+p1 <- 0.7
+p2 <- 0.7
 if (parameterset == 1) {
   alphs=matrix(c(0.1, 0.05, 0.06, 0.1),ncol = 2, byrow = TRUE)
   betas=matrix(c(0.1, 0.06, 0.06, 0.1),ncol = 2, byrow = TRUE)
@@ -190,23 +190,6 @@ for (i in 1:100) {
                           marray2j=ccoexmodel$marray2j)
   print(i)  
 }
-##only keep simulations where no pop doesn't go extinct
-list.simul<- list.simul[which(N.simul.2[,nyears-1]!=0 & N.simul.1[,nyears-1]!=0)]
-if (parameterset == 1) {
-  save(list.simul, file = "simul_coexistence_model_param1_pospriors.Rdata")
-} else {
-  if (parameterset == 2) {
-    save(list.simul, file = "simul_coexistence_model_param2_pospriors.Rdata")
-  } else {
-    if (parameterset == 3) {
-      save(list.simul, file = "simul_coexistence_model_param3_pospriors.Rdata")
-    } else {
-      if (parameterset == 4) {
-        save(list.simul, file = "simul_coexistence_model_param4_pospriors.Rdata")
-      }
-    }
-  }
-}
 #this code bit is just to check that all populations persist
 #until the end of the time series and check the mean pop size then
 nyears.tot <- length(list.simul[[1]][[1]])
@@ -229,6 +212,23 @@ mean(N.simul.1[,nyears])
 mean(N.simul.2[,nyears])
 mean(N.simul.1[,nyears]==0)
 mean(N.simul.2[,nyears]==0)
+##only keep simulations where no pop goes extinct
+list.simul<- list.simul[which(N.simul.2[,nyears-1]!=0 & N.simul.1[,nyears-1]!=0)]
+if (parameterset == 1) {
+  save(list.simul, file = "simul_coexistence_model_param1_pospriors.Rdata")
+} else {
+  if (parameterset == 2) {
+    save(list.simul, file = "simul_coexistence_model_param2_pospriors.Rdata")
+  } else {
+    if (parameterset == 3) {
+      save(list.simul, file = "simul_coexistence_model_param3_pospriors.Rdata")
+    } else {
+      if (parameterset == 4) {
+        save(list.simul, file = "simul_coexistence_model_param4_pospriors.Rdata")
+      }
+    }
+  }
+}
 
 #plot one pair of predator-prey abundance time series as illustration (100 chosen randomly)
 plot(1:nyears.tot, N.simul.1[40,], type='l', lwd=3, ylim=c(0,max(N.simul.1[40,],
