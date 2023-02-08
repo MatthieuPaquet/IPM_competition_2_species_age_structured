@@ -5,7 +5,7 @@
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(nimble)
 library(mcmcplots)
-parameterset <- 3
+parameterset <- 4
 #adapted from first parameter set in Bardon&Barraquand
 fert1=30
 fert2=25
@@ -175,10 +175,7 @@ ccoexmodel <- compileNimble(coexmodel)
 list.simul <- list()
 ###simulate 100 datasets and run IPM on each
 for (i in 1:100) {
-###avoid one population getting extinct with parameter set 3 by changing seed
-  if(parameterset == 3) {
-    set.seed(i+18)} else {
-      set.seed(i)}
+      set.seed(i)
   ccoexmodel$simulate(nodesToSim)
   list.simul[[i]] <- list(N1j=ccoexmodel$N1j,N1a=ccoexmodel$N1a,
                           N2j=ccoexmodel$N2j,N2a=ccoexmodel$N2a,
@@ -193,6 +190,8 @@ for (i in 1:100) {
                           marray2j=ccoexmodel$marray2j)
   print(i)  
 }
+##only keep simulations where no pop doesn't go extinct
+list.simul<- list.simul[which(N.simul.2[,nyears-1]!=0 & N.simul.1[,nyears-1]!=0)]
 if (parameterset == 1) {
   save(list.simul, file = "simul_coexistence_model_param1_pospriors.Rdata")
 } else {
@@ -336,7 +335,7 @@ if (parameterset == 1) {
     }
   }
 }
-for (i in 2:100) {
+for (i in 2:length(list.simul)) {
   #set simulated data as data
   #start from the 21st year
   marray1j <- matrix(NA,(nyears-1),nyears)
