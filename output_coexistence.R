@@ -3,28 +3,11 @@ library(coda)
 library(viridis)
 library("scatterplot3d") 
 #parameter set
-parameterset <- 4
+parameterset <- 1
+load(file=paste("data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
+list2env(paramvalues,.GlobalEnv)
 #If want some plots that takes time to run
 PLOT <- T
-if (parameterset == 1) {
-  load(file="samples_coexistence_model_param1_pospriors.Rdata")
-  load(file="simul_coexistence_model_param1_pospriors.Rdata")
-} else {
-  if (parameterset == 2) {
-    load(file="samples_coexistence_model_param2_pospriors.Rdata")
-    load(file="simul_coexistence_model_param2_pospriors.Rdata")
-  } else {
-    if (parameterset == 3) {
-      load(file="samples_coexistence_model_param3_pospriors.Rdata")
-      load(file="simul_coexistence_model_param3_pospriors.Rdata")
-    } else {
-      if (parameterset == 4) {
-        load(file="samples_coexistence_model_param4_pospriors.Rdata")
-        load(file="simul_coexistence_model_param4_pospriors.Rdata")
-      }
-    }
-  }
-}
 n.simul <- length(list.samples)
 n.param <- dim(list.samples[[1]]$chain1)[2]
 n.years <- length(list.simul[[1]]$N1)
@@ -187,38 +170,6 @@ for (i in 1:n.simul) {
 }
 N1a <- seq(0,max(N1asimul),length=n.n) #density index adults species1
 N2a <- seq(0,max(N2asimul),length=n.n) #density index adults species2
-
-#adapted from first parameter set in Bardon&Barraquand
-fert1=30
-fert2=25
-phi1=0.5
-phi2=0.4
-s1a=0.5
-s2a=0.6
-#recapture probabilities
-p1=0.7
-p2=0.7
-#Improtant to make sure that those match with the ones used to simulate data!
-#Best would be to save them and load them with simulations
-if (parameterset == 1) {
-  alphs=matrix(c(0.1, 0.05, 0.06, 0.1),ncol = 2, byrow = TRUE)
-  betas=matrix(c(0.1, 0.06, 0.06, 0.1),ncol = 2, byrow = TRUE)
-} else {
-  if (parameterset == 2) {
-    alphs=matrix(c(0.1, 0.02, 0.112, 0.1),ncol = 2, byrow = TRUE)
-    betas=matrix(c(0.1, 0.125, 0.01, 0.1),ncol = 2, byrow = TRUE)
-  } else {
-    if (parameterset == 3) {
-      alphs=matrix(c(0.1, 0.043, 0.035, 0.1),ncol = 2, byrow = TRUE)
-      betas=matrix(c(0.1, 0.155, 0.165, 0.1),ncol = 2, byrow = TRUE)
-    } else {
-      if (parameterset == 4) {
-        alphs=matrix(c(0.1, 0.1, 0.1, 0.1),ncol = 2, byrow = TRUE)
-        betas=matrix(c(0.1, 0.1, 0.1, 0.1),ncol = 2, byrow = TRUE)
-      }
-    }
-  }
-}
 ##
 surv1a <- surv2a <-
 fec1 <- fec2 <- matrix(NA,n.n,n.n) 
@@ -304,16 +255,6 @@ for (i in 1:n.simul.conv) {
   abline(h=inv2,col="green")
   }#i
 ##some prior posterior overlaps
-#set values for lognormal priors to be defined as constants
-sdprior <- 0.5
-#supposed max observed value, used as prior mean on the log scale, is at expected fertility when N=1
-fledgrate1Neq1 <- fert1 / (1+alphs[1,1])
-fledgrate2Neq1 <- fert2 / (1+alphs[2,2])
-#prior parameters
-fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
-fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
-alphsprior <- log(alphs) -(sdprior^2 / 2)
-betasprior <- log(betas) -(sdprior^2 / 2)
 plot.new()
 for (i in 1:n.simul.conv) {
 set.seed(1)

@@ -5,7 +5,7 @@
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(nimble)
 library(mcmcplots)
-parameterset <- 3
+parameterset <- 1
 #adapted from first parameter set in Bardon&Barraquand
 fert1 <- 30
 fert2 <- 25
@@ -214,22 +214,7 @@ mean(N.simul.1[,nyears]==0)
 mean(N.simul.2[,nyears]==0)
 ##only keep simulations where no pop goes extinct
 list.simul<- list.simul[which(N.simul.2[,nyears-1]!=0 & N.simul.1[,nyears-1]!=0)]
-if (parameterset == 1) {
-  save(list.simul, file = "simul_coexistence_model_param1_pospriors.Rdata")
-} else {
-  if (parameterset == 2) {
-    save(list.simul, file = "simul_coexistence_model_param2_pospriors.Rdata")
-  } else {
-    if (parameterset == 3) {
-      save(list.simul, file = "simul_coexistence_model_param3_pospriors.Rdata")
-    } else {
-      if (parameterset == 4) {
-        save(list.simul, file = "simul_coexistence_model_param4_pospriors.Rdata")
-      }
-    }
-  }
-}
-
+save(list.simul, file = paste("data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
 #plot one pair of predator-prey abundance time series as illustration (100 chosen randomly)
 plot(1:nyears.tot, N.simul.1[40,], type='l', lwd=3, ylim=c(0,max(N.simul.1[40,],
                                                                  N.simul.2[40,],
@@ -272,6 +257,13 @@ fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
 fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
 alphsprior <- log(alphs) -(sdprior^2 / 2)
 betasprior <- log(betas) -(sdprior^2 / 2)
+#set list of parameter values to save with data
+paramvalues <- list(alphs = alphs, alphsprior = alphsprior,
+                    betas = betas, betasprior = betasprior,
+                    fert1 = fert1, fert1priormode = fert1priormode,
+                    fert2 = fert2, fert2priormode = fert2priormode,
+                    p1 = p1, p2 = p2, phi1 = phi1, phi2 = phi2,
+                    s1a = s1a, s2a = s2a, sdprior = sdprior)
 #set model constants
 coexconstants <- list(nyears=nyears,
                       r1j=r1j[nyears.start:(nyears.start+nyears-2)],
@@ -319,22 +311,6 @@ ccoexmcmc  <-  compileNimble(coexmcmc, project = ccoexmodelIPM)
 #Run the MCMC
 #change niter and burn in for final versions if necessary
 list.samples[[1]] <- runMCMC(ccoexmcmc,niter=30100,nburnin=100,thin=20,nchains=2,setSeed=T)
-##save posterior samples
-if (parameterset == 1) {
-  save(list.samples, file = "samples_coexistence_model_param1_pospriors.Rdata")
-} else {
-  if (parameterset == 2) {
-    save(list.samples, file = "samples_coexistence_model_param2_pospriors.Rdata")
-  } else {
-    if (parameterset == 3) {
-      save(list.samples, file = "samples_coexistence_model_param3_pospriors.Rdata")
-    } else {
-      if (parameterset == 4) {
-        save(list.samples, file = "samples_coexistence_model_param4_pospriors.Rdata")
-      }
-    }
-  }
-}
 for (i in 2:length(list.simul)) {
   #set simulated data as data
   #start from the 21st year
@@ -360,21 +336,7 @@ for (i in 2:length(list.simul)) {
   #Run the MCMC
   #change niter and burn in for final versions if necessary
   list.samples[[i]] <- runMCMC(ccoexmcmc,niter=30100,nburnin=100,thin=20,nchains=2,setSeed=T)
-  ##save posterior samples
-  if (parameterset == 1) {
-    save(list.samples, file = "samples_coexistence_model_param1_pospriors.Rdata")
-  } else {
-    if (parameterset == 2) {
-      save(list.samples, file = "samples_coexistence_model_param2_pospriors.Rdata")
-    } else {
-      if (parameterset == 3) {
-        save(list.samples, file = "samples_coexistence_model_param3_pospriors.Rdata")
-      } else {
-        if (parameterset == 4) {
-          save(list.samples, file = "samples_coexistence_model_param4_pospriors.Rdata")
-        }
-      }
-    }
-  }
+  ##save posterior samples together with simulated data and values
+  save(paramvalues, list.simul, list.samples, file = paste("data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
   print(i)
 }
