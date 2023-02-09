@@ -2,14 +2,32 @@ setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(coda)
 library(viridis)
 library("scatterplot3d") 
-load(file="samples_coexistence_model_param3_pospriors.Rdata")
-load(file="simul_coexistence_model_param3_pospriors.Rdata")
 #parameter set
-parameterset <- 3
+parameterset <- 4
+#If want some plots that takes time to run
+PLOT <- T
+if (parameterset == 1) {
+  load(file="samples_coexistence_model_param1_pospriors.Rdata")
+  load(file="simul_coexistence_model_param1_pospriors.Rdata")
+} else {
+  if (parameterset == 2) {
+    load(file="samples_coexistence_model_param2_pospriors.Rdata")
+    load(file="simul_coexistence_model_param2_pospriors.Rdata")
+  } else {
+    if (parameterset == 3) {
+      load(file="samples_coexistence_model_param3_pospriors.Rdata")
+      load(file="simul_coexistence_model_param3_pospriors.Rdata")
+    } else {
+      if (parameterset == 4) {
+        load(file="samples_coexistence_model_param4_pospriors.Rdata")
+        load(file="simul_coexistence_model_param4_pospriors.Rdata")
+      }
+    }
+  }
+}
 n.simul <- length(list.samples)
 n.param <- dim(list.samples[[1]]$chain1)[2]
 n.years <- length(list.simul[[1]]$N1)
-PLOT <- F
 if (PLOT){
 for (i in 1:n.simul) {
 plot(list.samples[[i]]$chain1[,'alphs[1, 1]'],type="l",ylim=c(-0.1,1))
@@ -135,6 +153,7 @@ for (s in 1:n.simul.conv) {
     svar2est[s,,i] = mcmc[grep('^svar2\\[', names(mcmc))]
   }#i
 }#s
+if (PLOT){
 #posterior correlations within functions
 par(mfrow=c(2,2))
 plot(alphs11est,alphs12est,col=rgb(0,0,0,0.1))
@@ -156,6 +175,7 @@ par(mfrow=c(2,2))
 plot(betas22est,betas21est,col=rgb(0,0,0,0.1))
 plot(phi2est,betas22est,col=rgb(0,0,0,0.1))
 plot(phi2est,betas21est,col=rgb(0,0,0,0.1))
+}#plots
 #get the true functional responses between density and vital rates
 N1asimul <- matrix(NA,n.simul,n.years)
 N2asimul <- matrix(NA,n.simul,n.years)
@@ -178,6 +198,8 @@ s2a=0.6
 #recapture probabilities
 p1=0.7
 p2=0.7
+#Improtant to make sure that those match with the ones used to simulate data!
+#Best would be to save them and load them with simulations
 if (parameterset == 1) {
   alphs=matrix(c(0.1, 0.05, 0.06, 0.1),ncol = 2, byrow = TRUE)
   betas=matrix(c(0.1, 0.06, 0.06, 0.1),ncol = 2, byrow = TRUE)
@@ -197,7 +219,7 @@ if (parameterset == 1) {
     }
   }
 }
-##to adjust
+##
 surv1a <- surv2a <-
 fec1 <- fec2 <- matrix(NA,n.n,n.n) 
 for (i in 1:n.n) {
@@ -215,7 +237,7 @@ persp(z = fec1,x=N1a,y=N2a,xlab="N1a",ylab="N2a",zlab="Fecundity species 1",
       zlim=c(0,40),theta = 60,ticktype="detailed")
 persp(z = fec2,x=N1a,y=N2a,xlab="N1a",ylab="N2a",zlab="Fecundity species 2",
       zlim=c(0,40),theta = 60,ticktype="detailed")
-##computation of juvenile survival and fecundity at equilibriums abundances
+##computation of juvenile survival and fecundity at equilibrium abundances
 #Will be later used to define intercepts of "phenomenological" models with abundances centered
 #adapted from code in Bardon and Barraquand
 #get equilibriums numerically
@@ -292,11 +314,14 @@ fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
 fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
 alphsprior <- log(alphs) -(sdprior^2 / 2)
 betasprior <- log(betas) -(sdprior^2 / 2)
-set.seed(1)
 plot.new()
-plot(density(fert1est[1,]))
+for (i in 1:n.simul.conv) {
+set.seed(1)
+par(mfrow=c(2,1))
+plot(density(fert1est[i,]))
 lines(density(rlnorm(3000,fert1priormode, sd=sdprior)))
 abline(v=fert1)
-plot(density(fert2est[1,]))
+plot(density(fert2est[i,]))
 lines(density(rlnorm(3000,fert2priormode, sd=sdprior)))
 abline(v=fert2)
+}
