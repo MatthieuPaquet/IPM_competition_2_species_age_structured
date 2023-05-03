@@ -3,7 +3,7 @@ library(coda)
 library(viridis)
 library("scatterplot3d") 
 #parameter set
-parameterset <- 4
+parameterset <- 1
 load(file=paste("data/data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
 list2env(paramvalues,.GlobalEnv)
 #If want some plots that takes time to run
@@ -266,3 +266,35 @@ plot(density(fert2est[i,]))
 lines(density(rlnorm(3000,fert2priormode, sd=sdprior)),lty=2)
 abline(v=fert2)
 }
+
+getestimates <- function(param,trueval) {
+  n.simul.conv <- nrow(param)
+  coverage <- numeric(n.simul.conv)
+  for (s in 1:n.simul.conv){
+    coverage[s] <- ifelse(quantile(param[s,],0.025)<trueval&trueval<quantile(param[s,],0.975),1,0)
+  }#s
+  estimates <- numeric(5)
+  names(estimates) <- c("simul. value","est. mean","2.5%","97.5%","coverage 95%")
+  estimates[1] <- trueval
+  estimates[2] <- mean(param)
+  estimates[3] <- quantile(rowMeans(param),0.025)
+  estimates[4] <- quantile(rowMeans(param),0.975)
+  estimates[5] <- mean(coverage)
+  return(estimates)
+}
+summary_inv1 <- getestimates(inv1est,inv1)
+summary_inv2 <- getestimates(inv2est,inv2)
+plot.new()
+par(mfrow = c(1, 1), cex.axis = 0.8, cex.lab = 1, mar = c(10, 3, 3, 3), las = 1)
+plot(main ="Mean estimated invasion criteria",x='n',ylim=c(0,max(c(summary_inv1[4],summary_inv2[4])+2)),xlim=c(0.5,2.5),pch=16,xaxt='n',xlab='',ylab='')
+segments(lwd=5,c(1:2),c(summary_inv1[4],summary_inv2[4]),c(1:2),c(summary_inv1[3],summary_inv2[3]))
+points(pch=21,x=c(1:2),c(summary_inv1[2],summary_inv2[2]),col="black",bg= viridis(6)[4],cex=2)
+points(pch=19,x=c(1:2),c(summary_inv1[1],summary_inv2[1]),col="red",cex=1)
+mtext( par(las=2),text=c("invasion criteria sp.1","invasion criteria sp.2"),
+       at=c(1:2), side=1,cex=1)
+abline(h=1)
+text("95% Coverages:",x=0.7,y=max(c(summary_inv1[4],summary_inv2[4])+1))
+text(round(summary_inv1[5],2),x=1,y=max(c(summary_inv1[4],summary_inv2[4])+1))
+text(round(summary_inv2[5],2),x=2,y=max(c(summary_inv1[4],summary_inv2[4])+1))
+legend('topright',col="red",legend="true value",pch=19)
+
