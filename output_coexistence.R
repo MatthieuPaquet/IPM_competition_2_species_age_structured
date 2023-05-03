@@ -3,11 +3,11 @@ library(coda)
 library(viridis)
 library("scatterplot3d") 
 #parameter set
-parameterset <- 1
-load(file=paste("data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
+parameterset <- 4
+load(file=paste("data/data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
 list2env(paramvalues,.GlobalEnv)
 #If want some plots that takes time to run
-PLOT <- T
+PLOT <- F
 n.simul <- length(list.samples)
 n.param <- dim(list.samples[[1]]$chain1)[2]
 n.years <- length(list.simul[[1]]$N1)
@@ -231,7 +231,7 @@ n1astarsingle <- ((- alphs[1,1] - betas[1,1]) + sqrt( (alphs[1,1] + betas[1,1])^
 n2astarsingle <- ((- alphs[2,2] - betas[2,2]) + sqrt( (alphs[2,2] + betas[2,2])^2 -
                                                       4 * alphs[2,2] * betas[2,2] *
                                                       (-D2 +1))) / (2 * alphs[2,2] * betas[2,2])
-inv1 <- D2 / ((1 + betas[1,2] * n2astarsingle) * (1 + alphs[1,2] * n2astarsingle))
+inv1 <- D1 / ((1 + betas[1,2] * n2astarsingle) * (1 + alphs[1,2] * n2astarsingle))
 inv2 <- D2 / ((1 + betas[2,1] * n1astarsingle) * (1 + alphs[2,1] * n1astarsingle))
 #estimate invasion criteria
 D1est <- (fert1est * phi1est) / (1 - s1aest)
@@ -260,9 +260,9 @@ for (i in 1:n.simul.conv) {
 set.seed(1)
 par(mfrow=c(2,1))
 plot(density(fert1est[i,]))
-lines(density(rlnorm(3000,fert1priormode, sd=sdprior)))
+lines(density(rlnorm(3000,fert1priormode, sd=sdprior)),lty=2)
 abline(v=fert1)
 plot(density(fert2est[i,]))
-lines(density(rlnorm(3000,fert2priormode, sd=sdprior)))
+lines(density(rlnorm(3000,fert2priormode, sd=sdprior)),lty=2)
 abline(v=fert2)
 }
