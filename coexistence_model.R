@@ -214,8 +214,8 @@ mean(N.simul.1[,nyears]==0)
 mean(N.simul.2[,nyears]==0)
 ##only keep simulations where no pop goes extinct
 list.simul<- list.simul[which(N.simul.2[,nyears-1]!=0 & N.simul.1[,nyears-1]!=0)]
-save(list.simul, file = paste("data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
-#plot one pair of predator-prey abundance time series as illustration (100 chosen randomly)
+save(list.simul, file = paste("data/data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
+#plot one pair of predator-prey abundance time series as illustration (40 chosen randomly)
 plot(1:nyears.tot, N.simul.1[40,], type='l', lwd=3, ylim=c(0,max(N.simul.1[40,],
                                                                  N.simul.2[40,],
                                                                  N.simul.obs.1[40,],
@@ -337,6 +337,6 @@ for (i in 2:length(list.simul)) {
   #change niter and burn in for final versions if necessary
   list.samples[[i]] <- runMCMC(ccoexmcmc,niter=30100,nburnin=100,thin=20,nchains=2,setSeed=T)
   ##save posterior samples together with simulated data and values
-  save(paramvalues, list.simul, list.samples, file = paste("data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
+  save(paramvalues, list.simul, list.samples, file = paste("data/data_coexistence_model_param",parameterset,"_pospriors.Rdata",sep=""))
   print(i)
 }

@@ -5,7 +5,7 @@
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(nimble)
 library(mcmcplots)
-parameterset <- 1
+parameterset <- 2
 #adapted from first parameter set in Bardon&Barraquand
 #Intercepts are values at equilibrium from the BB model (calculated in "ouptput_coexistence.R")
 fert1=log(5.58)
@@ -21,10 +21,15 @@ p2=0.7
 if (parameterset == 1) {
   alphs=matrix(c(-0.1, -0.05, -0.06, -0.1),ncol = 2, byrow = TRUE)
   betas=matrix(c(-0.1, -0.06, -0.06, -0.1),ncol = 2, byrow = TRUE)
+  #equilibria from the B&B model
+  N1st <- 34
+  N2st <- 19.6
 } else {
   if (parameterset == 2) {
     alphs=matrix(c(-0.1, -0.02, -0.112, -0.1),ncol = 2, byrow = TRUE)
     betas=matrix(c(-0.1, -0.125, -0.01, -0.1),ncol = 2, byrow = TRUE)
+    N1st <- 28.3
+    N2st <- 24.8
   } else {
     if (parameterset == 3) {
       alphs=matrix(c(-0.1, -0.043, -0.035, -0.1),ncol = 2, byrow = TRUE)
@@ -57,10 +62,10 @@ N1adet[1] <-N0
 N2jdet[1] <-N0
 N2adet[1] <-N0
 for (t in 1:years){
-  svar1jdet[t] <- plogis(phi1 + betas[1,1] * (log(N1adet[t])-log(34)) + betas[1,2] * (log(N2adet[t]) - log(19.6)))
-  svar2jdet[t] <- plogis(phi2 + betas[2,1] * (log(N1adet[t])-log(34)) + betas[2,2] * (log(N2adet[t]) - log(19.6))) 
-  N1jdet[t+1]<- exp(fert1 + alphs[1,1] * (log(N1adet[t])-log(34)) + alphs[1,2] * (log(N2adet[t]) - log(19.6))) * N1adet[t]
-  N2jdet[t+1]<- exp(fert2 + alphs[2,2] * (log(N2adet[t]) - log(19.6)) + alphs[2,1] * (log(N1adet[t])-log(34))) * N2adet[t]
+  svar1jdet[t] <- plogis(phi1 + betas[1,1] * (log(N1adet[t])-log(N1st)) + betas[1,2] * (log(N2adet[t]) - log(N2st)))
+  svar2jdet[t] <- plogis(phi2 + betas[2,1] * (log(N1adet[t])-log(N1st)) + betas[2,2] * (log(N2adet[t]) - log(N2st))) 
+  N1jdet[t+1]<- exp(fert1 + alphs[1,1] * (log(N1adet[t])-log(N1st)) + alphs[1,2] * (log(N2adet[t]) - log(N2st))) * N1adet[t]
+  N2jdet[t+1]<- exp(fert2 + alphs[2,2] * (log(N2adet[t]) - log(N2st)) + alphs[2,1] * (log(N1adet[t])-log(N1st))) * N2adet[t]
   N1adet[t+1]<-svar1jdet[t] * N1jdet[t] + s1a * N1adet[t] 
   N2adet[t+1]<-svar2jdet[t] * N2jdet[t] + s2a * N2adet[t]
 }#t
@@ -217,7 +222,7 @@ for (i in 1:100) {
                           marray2j=ccoexmodel$marray2j)
   print(i)  
 }
-save(list.simul, file="simul_coexistence_model_loglogit.Rdata")
+save(list.simul, file="data/simul_coexistence_model_loglogit_param2.Rdata")
 #this code bit is just to check that all populations persist
 #until the end of the time series and check the mean pop size then
 nyears.tot <- length(list.simul[[1]][[1]])
@@ -318,7 +323,7 @@ ccoexmcmc  <-  compileNimble(coexmcmc, project = ccoexmodelIPM)
 #change niter and burn in for final versions if necessary
 list.samples[[1]] <- runMCMC(ccoexmcmc,niter=30100,nburnin=100,thin=20,nchains=2,setSeed=T)
 ##save posterior samples
-save(list.samples, file="samples_coexistence_model_loglogit.Rdata")
+save(list.samples, file="data/samples_coexistence_model_loglogit_param2.Rdata")
 for (i in 2:100) {
   #set simulated data as data
   #start from the 21st year
@@ -345,6 +350,6 @@ for (i in 2:100) {
   #change niter and burn in for final versions if necessary
   list.samples[[i]] <- runMCMC(ccoexmcmc,niter=30100,nburnin=100,thin=20,nchains=2,setSeed=T)
   ##save posterior samples
-  save(list.samples, file="samples_coexistence_model_loglogit.Rdata")
+  save(list.samples, file="data/samples_coexistence_model_loglogit_param2.Rdata")
   print(i)
 }
