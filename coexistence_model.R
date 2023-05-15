@@ -401,6 +401,6 @@ for (i in 2:length(list.simul)) {
   #change niter and burn in for final versions if necessary
   list.samples[[i]] <- runMCMC(ccoexmcmc,niter=15100,nburnin=100,thin=10,nchains=2,inits=coexinits,setSeed=T)
   ##save posterior samples together with simulated data and values
-  save(paramvalues, list.simul, coexconstants,list.samples, file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears",".Rdata",sep=""))
+  save(paramvalues, list.simul, coexconstants,list.samples, file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears.Rdata",sep=""))
   print(i)
 }

@@ -11,8 +11,7 @@ samplers <- "AF_slice"
 nyears <- 30
 nmarked <- 100
 nnests <- 50
-
-load(file=paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",".Rdata",sep=""))
+load(file= paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears.Rdata",sep=""))
 list2env(paramvalues,.GlobalEnv)
 #If want some plots that takes time to run
 PLOT <- T
