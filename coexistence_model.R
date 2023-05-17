@@ -17,7 +17,7 @@ nsim <- 100
 #sample sizes
 nyears <- 30
 #nyears <- 100
-#nmarked <- 100
+nmarked <- 100
 #nmarked <- 1000
 #nmarked <- 10000
 nnests <- 50
