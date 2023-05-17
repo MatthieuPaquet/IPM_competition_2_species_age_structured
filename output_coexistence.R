@@ -14,36 +14,48 @@ nnests <- 50
 load(file= paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears.Rdata",sep=""))
 list2env(paramvalues,.GlobalEnv)
 #If want some plots that takes time to run
-PLOT <- T
+PLOT <- F
 n.simul <- length(list.samples)
 n.param <- dim(list.samples[[1]]$chain1)[2]
 n.years <- length(list.simul[[1]]$N1a)
 if (PLOT){
   for (i in 1:n.simul) {
     plot(list.samples[[i]]$chain1[,'alphs[1, 1]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'alphs[1, 1]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'alphs[1, 1]'],type="l",col="blue")
+    abline(h=alphs[1,1],col="red")
     plot(list.samples[[i]]$chain1[,'alphs[2, 1]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'alphs[2, 1]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'alphs[2, 1]'],type="l",col="blue")
+    abline(h=alphs[2,1],col="red")
     plot(list.samples[[i]]$chain1[,'alphs[1, 2]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'alphs[1, 2]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'alphs[1, 2]'],type="l",col="blue")
+    abline(h=alphs[1,2],col="red")
     plot(list.samples[[i]]$chain1[,'alphs[2, 2]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'alphs[2, 2]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'alphs[2, 2]'],type="l",col="blue")
+    abline(h=alphs[2,2],col="red")
     plot(list.samples[[i]]$chain1[,'betas[1, 1]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'betas[1, 1]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'betas[1, 1]'],type="l",col="blue")
+    abline(h=betas[1,1],col="red")
     plot(list.samples[[i]]$chain1[,'betas[2, 1]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'betas[2, 1]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'betas[2, 1]'],type="l",col="blue")
+    abline(h=betas[2,1],col="red")
     plot(list.samples[[i]]$chain1[,'betas[1, 2]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'betas[1, 2]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'betas[1, 2]'],type="l",col="blue")
+    abline(h=betas[1,2],col="red")
     plot(list.samples[[i]]$chain1[,'betas[2, 2]'],type="l",ylim=c(-0.1,1))
-    points(list.samples[[i]]$chain2[,'betas[2, 2]'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'betas[2, 2]'],type="l",col="blue")
+    abline(h=betas[2,2],col="red")
     plot(list.samples[[i]]$chain1[,'fert1'],type="l",ylim=c(0,100))
-    points(list.samples[[i]]$chain2[,'fert1'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'fert1'],type="l",col="blue")
+    abline(h=fert1,col="red")
     plot(list.samples[[i]]$chain1[,'fert2'],type="l",ylim=c(0,100))
-    points(list.samples[[i]]$chain2[,'fert2'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'fert2'],type="l",col="blue")
+    abline(h=fert2,col="red")
     plot(list.samples[[i]]$chain1[,'phi1'],type="l",ylim=c(0,1))
-    points(list.samples[[i]]$chain2[,'phi1'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'phi1'],type="l",col="blue")
+    abline(h=phi1,col="red")
     plot(list.samples[[i]]$chain1[,'phi2'],type="l",ylim=c(0,1))
-    points(list.samples[[i]]$chain2[,'phi2'],type="l",col="red")
+    points(list.samples[[i]]$chain2[,'phi2'],type="l",col="blue")
+    abline(h=phi2,col="red")
   }#plots
 }
 
@@ -320,52 +332,133 @@ for (i in 1:n.simul.conv) {
   abline(h=inv2,col="green")
 }#i
 ##some prior posterior overlaps
-plot.new()
-for (i in 1:n.simul.conv) {
-  set.seed(1)
-  par(mfrow=c(2,1))
-  plot(density(fert1est[i,]))
-  lines(density(rlnorm(3000,fert1priormode, sd=sdprior)),lty=2)
-  abline(v=fert1)
-  plot(density(fert2est[i,]))
-  lines(density(rlnorm(3000,fert2priormode, sd=sdprior)),lty=2)
-  abline(v=fert2)
-}
-plot.new()
-for (i in 1:n.simul.conv) {
-  set.seed(1)
-  par(mfrow=c(2,2))
-  plot(density(alphs11est[i,]))
-  lines(density(rlnorm(3000,alphsprior[1,1], sd=sdprior)),lty=2)
-  abline(v=alphs[1,1])
-  plot(density(alphs12est[i,]))
-  lines(density(rlnorm(3000,alphsprior[1,2], sd=sdprior)),lty=2)
-  abline(v=alphs[1,2])
-  plot(density(alphs21est[i,]))
-  lines(density(rlnorm(3000,alphsprior[2,1], sd=sdprior)),lty=2)
-  abline(v=alphs[2,1])
-  plot(density(alphs22est[i,]))
-  lines(density(rlnorm(3000,alphsprior[2,2], sd=sdprior)),lty=2)
-  abline(v=alphs[2,2])
-}
-plot.new()
-for (i in 1:n.simul.conv) {
-  set.seed(1)
-  par(mfrow=c(2,2))
-  plot(density(betas11est[i,]))
-  lines(density(rlnorm(3000,betasprior[1,1], sd=sdprior)),lty=2)
-  abline(v=betas[1,1])
-  plot(density(betas12est[i,]))
-  lines(density(rlnorm(3000,betasprior[1,2], sd=sdprior)),lty=2)
-  abline(v=betas[1,2])
-  plot(density(betas21est[i,]))
-  lines(density(rlnorm(3000,betasprior[2,1], sd=sdprior)),lty=2)
-  abline(v=betas[2,1])
-  plot(density(betas22est[i,]))
-  lines(density(rlnorm(3000,betasprior[2,2], sd=sdprior)),lty=2)
-  abline(v=betas[2,2])
+
+#==========================================================
+#==========================================================
+# R code for Book Parameter Redundancy and Identifiability
+# by Diana J. Cole
+# R code is for Immigration Integrated Model
+# Section 9.2.2
+#==========================================================
+#==========================================================
+overlap <- function(data,prior,minv,maxv,freqv,xlabel,truevalue) {
+  # OVERLAP calculates the proportion overlap between the
+  # prior and posterior using a kernel density to approximate
+  # posterior
+  # Also plots a graph of prior and posterior
+  # 'data' contains the posterior chain
+  # 'prior' contains a vector of prior values evaluated at same interval
+  # as 'minv', 'maxv' and 'freqv' values given
+  
+  k1 <- 0.9 # Controls the smoothness of the kernel
+  
+  x <- seq(minv,maxv,freqv)
+  nn <- length(x)
+  fK <- c(rep(0,nn))
+  
+  overlap<-0
+  for (i in 1:nn) {
+    fK[i]<-kernel(x[i],data,k1)
+    if (fK[i]<prior[i]){
+      overlap<-overlap+fK[i]*freqv
+    }
+    else {
+      overlap=overlap+prior[i]*freqv
+    }
+  }
+  
+  plot(x,fK,type = "l",ylab="f",xlab=xlabel)
+  lines(x,prior,lty=2)
+  abline(v=truevalue)#added
+  return(overlap)
 }
 
+
+kernel <- function(y,data,k1) {
+  # KERNEL Calculates a kernel density estimate for a sample in 'data'.
+  #   'y' is the value at which we want the kernel estimate.
+  #   'k1' can be chosen to vary the amount of smoothing;
+  #   Calls the function DELTA.
+  
+  n <- length(data)
+  h <- k1*min(sd(data),IQR(data)/1.34)/n^0.2	
+  
+  z <- 0
+  for (i in 1:n ) {
+    z<-z+delta((y-data[i])/h)
+  }				            
+  z<-z/(n*h);
+}
+
+delta <- function(u) {
+  # DELTA calculates a normal kernel
+  
+  y <-(exp(-u*u/2))/sqrt(2*pi);
+}
+minv<-0
+maxv<-1
+freqv<-0.01
+xx <- seq(minv,maxv,freqv)
+plot.new()
+par(mfrow=c(2,2))
+beta.overlap <- array(NA,dim=c(2,2,n.simul.conv))
+for (i in 1:n.simul.conv) {
+  prior <-  dlnorm(xx,betasprior[1,1], sd=sdprior)
+  beta.overlap[1,1,i]<-overlap(betas11est[i,],prior,minv,maxv,freqv,expression(beta11),betas[1,1])
+  prior <-  dlnorm(xx,betasprior[1,2], sd=sdprior)
+  beta.overlap[1,2,i]<-overlap(betas12est[i,],prior,minv,maxv,freqv,expression(beta12),betas[1,2])
+  prior <-  dlnorm(xx,betasprior[2,1], sd=sdprior)
+  beta.overlap[2,1,i]<-overlap(betas21est[i,],prior,minv,maxv,freqv,expression(beta21),betas[2,1])
+  prior <-  dlnorm(xx,betasprior[2,2], sd=sdprior)
+  beta.overlap[2,2,i]<-overlap(betas22est[i,],prior,minv,maxv,freqv,expression(beta22),betas[2,2])
+}
+summary(beta.overlap)
+minv<-0
+maxv<-1
+freqv<-0.01
+xx <- seq(minv,maxv,freqv)
+plot.new()
+par(mfrow=c(2,2))
+alpha.overlap <- array(NA,dim=c(2,2,n.simul.conv))
+for (i in 1:n.simul.conv) {
+  prior <-  dlnorm(xx,alphsprior[1,1], sd=sdprior)
+  alpha.overlap[1,1,i]<-overlap(alphs11est[i,],prior,minv,maxv,freqv,expression(alpha11),alphs[1,1])
+  prior <-  dlnorm(xx,alphsprior[1,2], sd=sdprior)
+  alpha.overlap[1,2,i]<-overlap(alphs12est[i,],prior,minv,maxv,freqv,expression(alpha12),alphs[1,2])
+  prior <-  dlnorm(xx,alphsprior[2,1], sd=sdprior)
+  alpha.overlap[2,1,i]<-overlap(alphs21est[i,],prior,minv,maxv,freqv,expression(alpha21),alphs[2,1])
+  prior <-  dlnorm(xx,alphsprior[2,2], sd=sdprior)
+  alpha.overlap[2,2,i]<-overlap(alphs22est[i,],prior,minv,maxv,freqv,expression(alpha22),alphs[2,2])
+}
+summary(alpha.overlap)
+plot.new()
+minv<-0
+maxv<-60
+freqv<-0.1
+xx <- seq(minv,maxv,freqv)
+plot.new()
+par(mfrow=c(2,1))
+fert.overlap <- matrix(NA,nrow=2,ncol=n.simul.conv)
+for (i in 1:n.simul.conv) {
+  prior <-  dlnorm(xx,fert1priormode, sd=sdprior)
+  fert.overlap[1,i]<-overlap(fert1est[i,],prior,minv,maxv,freqv,expression(fert1),fert1)
+  prior <-  dlnorm(xx,fert2priormode, sd=sdprior)
+  fert.overlap[2,i]<-overlap(fert2est[i,],prior,minv,maxv,freqv,expression(fert2),fert2)
+}
+plot.new()
+minv<-0
+maxv<-1
+freqv<-0.01
+xx <- seq(minv,maxv,freqv)
+plot.new()
+par(mfrow=c(2,1))
+phi.overlap <- matrix(NA,nrow=2,ncol=n.simul.conv)
+for (i in 1:n.simul.conv) {
+  prior <-  dunif(xx,0,1)
+  phi.overlap[1,i]<-overlap(phi1est[i,],prior,minv,maxv,freqv,expression(phi1),phi1)
+  phi.overlap[2,i]<-overlap(phi2est[i,],prior,minv,maxv,freqv,expression(phi2),phi2)
+}
+summary(as.vector(phi.overlap))
 getestimates <- function(param,trueval) {
   n.simul.conv <- nrow(param)
   coverage <- numeric(n.simul.conv)
