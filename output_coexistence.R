@@ -7,14 +7,19 @@ parameterset <- 1
 samplers <- "AF_slice"
 #samplers <- "defaultsamplers"
 #samplers <- "RW_block"
+#Use exponential or lognormal priors for density dependent slope parameters
+PRIOREXP <- T
+if (PRIOREXP){
+  ddpriors <- "ddpriorexp"
+} else {ddpriors <- "ddpriorlognorm"}
 #sample sizes
 nyears <- 30
 nmarked <- 100
 nnests <- 50
-load(file= paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears.Rdata",sep=""))
+load(file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears",ddpriors,".Rdata",sep=""))
 list2env(paramvalues,.GlobalEnv)
 #If want some plots that takes time to run
-PLOT <- F
+PLOT <- T
 n.simul <- length(list.samples)
 n.param <- dim(list.samples[[1]]$chain1)[2]
 n.years <- length(list.simul[[1]]$N1a)
@@ -396,55 +401,59 @@ delta <- function(u) {
   y <-(exp(-u*u/2))/sqrt(2*pi);
 }
 minv<-0
-maxv<-1
-freqv<-0.01
+maxv<-2
+freqv<-0.1#these can be lowered for final version
 xx <- seq(minv,maxv,freqv)
 plot.new()
 par(mfrow=c(2,2))
 beta.overlap <- array(NA,dim=c(2,2,n.simul.conv))
+if (PRIOREXP){#change if the different beta[,] have different priors
+  betaprior <-  dexp(xx,1)
+} else {
+  betaprior <-  dlnorm(xx,0.5, 1)
+  }
 for (i in 1:n.simul.conv) {
-  prior <-  dlnorm(xx,betasprior[1,1], sd=sdprior)
-  beta.overlap[1,1,i]<-overlap(betas11est[i,],prior,minv,maxv,freqv,expression(beta11),betas[1,1])
-  prior <-  dlnorm(xx,betasprior[1,2], sd=sdprior)
-  beta.overlap[1,2,i]<-overlap(betas12est[i,],prior,minv,maxv,freqv,expression(beta12),betas[1,2])
-  prior <-  dlnorm(xx,betasprior[2,1], sd=sdprior)
-  beta.overlap[2,1,i]<-overlap(betas21est[i,],prior,minv,maxv,freqv,expression(beta21),betas[2,1])
-  prior <-  dlnorm(xx,betasprior[2,2], sd=sdprior)
-  beta.overlap[2,2,i]<-overlap(betas22est[i,],prior,minv,maxv,freqv,expression(beta22),betas[2,2])
+  beta.overlap[1,1,i]<-overlap(betas11est[i,],betaprior,minv,maxv,freqv,expression(beta11),betas[1,1])
+  beta.overlap[1,2,i]<-overlap(betas12est[i,],betaprior,minv,maxv,freqv,expression(beta12),betas[1,2])
+  beta.overlap[2,1,i]<-overlap(betas21est[i,],betaprior,minv,maxv,freqv,expression(beta21),betas[2,1])
+  beta.overlap[2,2,i]<-overlap(betas22est[i,],betaprior,minv,maxv,freqv,expression(beta22),betas[2,2])
 }
 summary(beta.overlap)
 minv<-0
-maxv<-1
-freqv<-0.01
+maxv<-2
+freqv<-0.1
 xx <- seq(minv,maxv,freqv)
 plot.new()
 par(mfrow=c(2,2))
 alpha.overlap <- array(NA,dim=c(2,2,n.simul.conv))
+if (PRIOREXP){#change if the different alpha[,] have different priors
+  alfaprior <-  dexp(xx,1)
+} else {
+  alfaprior <-  dlnorm(xx,0.5, 1)
+}
 for (i in 1:n.simul.conv) {
-  prior <-  dlnorm(xx,alphsprior[1,1], sd=sdprior)
-  alpha.overlap[1,1,i]<-overlap(alphs11est[i,],prior,minv,maxv,freqv,expression(alpha11),alphs[1,1])
-  prior <-  dlnorm(xx,alphsprior[1,2], sd=sdprior)
-  alpha.overlap[1,2,i]<-overlap(alphs12est[i,],prior,minv,maxv,freqv,expression(alpha12),alphs[1,2])
-  prior <-  dlnorm(xx,alphsprior[2,1], sd=sdprior)
-  alpha.overlap[2,1,i]<-overlap(alphs21est[i,],prior,minv,maxv,freqv,expression(alpha21),alphs[2,1])
-  prior <-  dlnorm(xx,alphsprior[2,2], sd=sdprior)
-  alpha.overlap[2,2,i]<-overlap(alphs22est[i,],prior,minv,maxv,freqv,expression(alpha22),alphs[2,2])
+  alpha.overlap[1,1,i]<-overlap(alphs11est[i,],alfaprior,minv,maxv,freqv,expression(alpha11),alphs[1,1])
+  alpha.overlap[1,2,i]<-overlap(alphs12est[i,],alfaprior,minv,maxv,freqv,expression(alpha12),alphs[1,2])
+  alpha.overlap[2,1,i]<-overlap(alphs21est[i,],alfaprior,minv,maxv,freqv,expression(alpha21),alphs[2,1])
+  alpha.overlap[2,2,i]<-overlap(alphs22est[i,],alfaprior,minv,maxv,freqv,expression(alpha22),alphs[2,2])
 }
 summary(alpha.overlap)
 plot.new()
 minv<-0
-maxv<-60
-freqv<-0.1
+maxv<-150
+freqv<-1
 xx <- seq(minv,maxv,freqv)
 plot.new()
 par(mfrow=c(2,1))
 fert.overlap <- matrix(NA,nrow=2,ncol=n.simul.conv)
+fert1prior <-  dlnorm(xx,fert1priormode, sd=sdprior)
+fert2prior <-  dlnorm(xx,fert2priormode, sd=sdprior)
 for (i in 1:n.simul.conv) {
-  prior <-  dlnorm(xx,fert1priormode, sd=sdprior)
-  fert.overlap[1,i]<-overlap(fert1est[i,],prior,minv,maxv,freqv,expression(fert1),fert1)
-  prior <-  dlnorm(xx,fert2priormode, sd=sdprior)
-  fert.overlap[2,i]<-overlap(fert2est[i,],prior,minv,maxv,freqv,expression(fert2),fert2)
+  fert.overlap[1,i]<-overlap(fert1est[i,],fert1prior,minv,maxv,freqv,expression(fert1),fert1)
+  fert.overlap[2,i]<-overlap(fert2est[i,],fert2prior,minv,maxv,freqv,expression(fert2),fert2)
 }
+summary(fert.overlap[1,])
+summary(fert.overlap[2,])
 plot.new()
 minv<-0
 maxv<-1
@@ -453,10 +462,10 @@ xx <- seq(minv,maxv,freqv)
 plot.new()
 par(mfrow=c(2,1))
 phi.overlap <- matrix(NA,nrow=2,ncol=n.simul.conv)
+phiprior <-  dunif(xx,0,1)
 for (i in 1:n.simul.conv) {
-  prior <-  dunif(xx,0,1)
-  phi.overlap[1,i]<-overlap(phi1est[i,],prior,minv,maxv,freqv,expression(phi1),phi1)
-  phi.overlap[2,i]<-overlap(phi2est[i,],prior,minv,maxv,freqv,expression(phi2),phi2)
+  phi.overlap[1,i]<-overlap(phi1est[i,],phiprior,minv,maxv,freqv,expression(phi1),phi1)
+  phi.overlap[2,i]<-overlap(phi2est[i,],phiprior,minv,maxv,freqv,expression(phi2),phi2)
 }
 summary(as.vector(phi.overlap))
 getestimates <- function(param,trueval) {

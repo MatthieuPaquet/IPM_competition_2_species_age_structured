@@ -12,6 +12,11 @@ parameterset <- 1
 samplers <- "AF_slice"
 #samplers <- "defaultsamplers"
 #samplers <- "RW_block"
+#Use exponential or lognormal priors for density dependent slope parameters
+PRIOREXP <- T
+if (PRIOREXP){
+  ddpriors <- "ddpriorexp"
+} else {ddpriors <- "ddpriorlognorm"}
 #number of simulated datasets
 nsim <- 100
 #sample sizes
@@ -154,14 +159,22 @@ coexcode  <-  nimbleCode({
   }#t
   phi1 ~ dunif(0,1) #shall we change these priors too?
   phi2 ~ dunif(0,1)
-  #think about priors
+ 
+  if (PRIOREXP) {
   for (a in 1:2) {
     for (b in 1:2) {
-      alphs[a,b] ~ dlnorm(alphsprior[a,b], sd=sdprior)
-      betas[a,b] ~ dlnorm(betasprior[a,b], sd=sdprior)
+      alphs[a,b] ~ dexp(1)
+      betas[a,b] ~ dexp(1)
     }#b
   }#a
-  
+  } else {
+    for (a in 1:2) {
+      for (b in 1:2) {
+        alphs[a,b] ~ dlnorm(0.5, 1)
+        betas[a,b] ~ dlnorm(0.5, 1)
+      }#b
+    }#a 
+    }#priors
 })
 #change abundances at equilibrium
 coexconstants  <-  list(nyears=nyears, r1j=r1j, r2j=r2j, 
@@ -269,11 +282,8 @@ fledgrate2Neq1 <- fert2 / (1+alphs[2,2])
 #prior parameters
 fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
 fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
-alphsprior <- log(alphs) -(sdprior^2 / 2)
-betasprior <- log(betas) -(sdprior^2 / 2)
 #set list of parameter values to save with data
-paramvalues <- list(alphs = alphs, alphsprior = alphsprior,
-                    betas = betas, betasprior = betasprior,
+paramvalues <- list(alphs = alphs, betas = betas, 
                     fert1 = fert1, fert1priormode = fert1priormode,
                     fert2 = fert2, fert2priormode = fert2priormode,
                     p1 = p1, p2 = p2, phi1 = phi1, phi2 = phi2,
@@ -286,46 +296,37 @@ coexconstants <- list(nyears=nyears,
                       fledg.sample.1=fledg.sample.1[nyears.start:(nyears.start+nyears-1)],
                       sdprior=sdprior,
                       fert1priormode=fert1priormode, fert2priormode=fert2priormode,
-                      alphsprior=alphsprior,betasprior=betasprior,
                       N1jinit=N1jinit, N1ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
 coexdata <- list(marray1j=marray1j,N1jobs=N1jobs,N1aobs=N1aobs,fledg1obs=fledg1obs,
                  marray2j=marray2j,N2jobs=N2jobs,N2aobs=N2aobs,fledg2obs=fledg2obs)
 ##initial values different than true values for parameters of interest, different for each of the 2 chains but same 2 sets of values for all snim models
-a1 <- a2 <- b1 <- b2 <- matrix(NA,2,2)
-set.seed(1)
-a1[,] <- rlnorm(4,alphsprior[,], sd=sdprior)
-b1[,] <- rlnorm(4,betasprior[,], sd=sdprior)
-coexinits_1 <- list(fert1=exp(fert1priormode),
-                    fert2=exp(fert1priormode),
-                    phi1=phi1,
-                    phi2=phi1,
-                    s1a=s1a,
-                    s2a=s1a,
-                    alphs=a1,
-                    betas=b1,
-                    p1=p1,
-                    p2=p1,
-                    N1jt1=N1jt1,
-                    N2jt1=N2jt1, 
-                    N1at1=N1at1,
-                    N2at1=N2at1)
-a2[,] <- rlnorm(4,alphsprior[,], sd=sdprior)
-b2[,] <- rlnorm(4,betasprior[,], sd=sdprior)
-coexinits_2 <- list(fert1=exp(fert2priormode),
+
+getinits <- function() {list(fert1=exp(fert1priormode),
                     fert2=exp(fert2priormode),
-                    phi1=phi2,
-                    phi2=phi2,
-                    s1a=s2a,
-                    s2a=s2a,
-                    alphs=a2,
-                    betas=b2,
-                    p1=p2,
-                    p2=p2,
-                    N1jt1=N1jt1,
-                    N2jt1=N2jt1, 
-                    N1at1=N1at1,
-                    N2at1=N2at1)
-coexinits <- list(coexinits_1,coexinits_2)
+                    phi1=runif(1,0.3,0.9),
+                    phi2=runif(1,0.3,0.9),
+                    s1a=runif(1,0.4,0.9),
+                    s2a=runif(1,0.4,0.9),
+                    p1=runif(1,0.6,0.9),
+                    p2=runif(1,0.6,0.9),
+                    N1jt1=rnorm(1,N1jt1,10),
+                    N2jt1=rnorm(1,N2jt1,10), 
+                    N1at1=rnorm(1,N1at1,10),
+                    N2at1=rnorm(1,N2at1,10),
+                    alphs=matrix(runif(4,0, 0.5),2,2),
+                    betas=matrix(runif(4,0, 0.5),2,2),
+  N1j=rep(NA,nyears),
+  N2j=rep(NA,nyears),
+  N1aold=rep(NA,nyears),
+  N2aold=rep(NA,nyears),
+  N1anew=rep(NA,nyears),
+  N2anew=rep(NA,nyears))
+}
+set.seed(6)#adjusted to avoid slice samplers getting stuck...
+coexinits1 <-getinits()
+set.seed(10)
+coexinits2 <-getinits()
+coexinits <- list(coexinits1,coexinits2)
 #Build the model for the IPM
 coexmodelIPM  <-  nimbleModel(coexcode,
                               constants = coexconstants,data=coexdata)
@@ -374,7 +375,11 @@ coexmcmc  <-  buildMCMC(coexmcmcConf)
 ccoexmcmc  <-  compileNimble(coexmcmc, project = ccoexmodelIPM)
 #Run the MCMC
 #change niter and burn in for final versions if necessary
-list.samples[[1]] <- runMCMC(ccoexmcmc,niter=15100,nburnin=100,thin=10,nchains=2,setSeed=T,inits = coexinits)
+niter <- 15100
+nburnin <- 100
+thin <- 10
+nchains <- 2
+list.samples[[1]] <- runMCMC(ccoexmcmc,niter=niter,nburnin=nburnin,thin=thin,nchains=nchains,setSeed=T,inits = coexinits)
 for (i in 2:length(list.simul)) {
   #set simulated data as data
   marray1j <- matrix(NA,(nyears-1),nyears)
@@ -399,8 +404,8 @@ for (i in 2:length(list.simul)) {
   ccoexmodelIPM$setData(coexdata)
   #Run the MCMC
   #change niter and burn in for final versions if necessary
-  list.samples[[i]] <- runMCMC(ccoexmcmc,niter=15100,nburnin=100,thin=10,nchains=2,inits=coexinits,setSeed=T)
+  list.samples[[i]] <- runMCMC(ccoexmcmc,niter=niter,nburnin=nburnin,thin=thin,nchains=nchains,inits=coexinits,setSeed=T)
   ##save posterior samples together with simulated data and values
-  save(paramvalues, list.simul, coexconstants,list.samples, file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears.Rdata",sep=""))
+  save(paramvalues, list.simul, coexconstants,list.samples, file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears",ddpriors,".Rdata",sep=""))
   print(i)
 }
