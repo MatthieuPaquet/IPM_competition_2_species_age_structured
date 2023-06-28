@@ -13,7 +13,7 @@ samplers <- "AF_slice"
 #samplers <- "defaultsamplers"
 #samplers <- "RW_block"
 #Use exponential or lognormal priors for density dependent slope parameters
-PRIOREXP <- T
+PRIOREXP <- F
 if (PRIOREXP){
   ddpriors <- "ddpriorexp"
 } else {ddpriors <- "ddpriorlognorm"}
@@ -63,6 +63,9 @@ N2at1 <- N2ainit <- 100
 #Number of nestlings marked every year
 r1j <- rep(nmarked, (nyears - 1))
 r2j <- rep(nmarked, (nyears - 1))
+#no individuals newly marked as adults
+r1a <- c(0,rep(NA,(nyears - 2)))
+r2a <- c(0,rep(NA,(nyears - 2)))
 #number of nests monitored
 fledg.sample.1 <- rep(nnests, nyears)
 fledg.sample.2 <- rep(nnests, nyears)
@@ -74,6 +77,8 @@ N2aobs <- rep(NA, nyears)
 #empty data
 marray1j <- matrix(NA, nyears-1, nyears)
 marray2j <- matrix(NA, nyears-1, nyears)
+marray1a <- matrix(NA, nyears-1, nyears)
+marray2a <- matrix(NA, nyears-1, nyears)
 fledg1obs <- rep(NA, nyears)
 fledg2obs <- rep(NA, nyears)
 #write the model code
@@ -127,6 +132,14 @@ coexcode  <-  nimbleCode({
   for (t in 1:(nyears-1)) {
     marray1j[t,1:nyears] ~ dmulti(pr1j[t,1:nyears], r1j[t])
     marray2j[t,1:nyears] ~ dmulti(pr2j[t,1:nyears], r2j[t])
+    marray1a[t,1:nyears] ~ dmulti(pr1a[t,1:nyears], r1a[t])
+    marray2a[t,1:nyears] ~ dmulti(pr2a[t,1:nyears], r2a[t])
+  }#t
+  #IMPORTANT we can do this because only juveniles are newly marked
+  #otherwise we would also need to provide data about the newly marked adults and add it
+  for (t in 1:(nyears-2)) {
+    r1a[t+1] <- sum(marray1j[1:t,t]) + sum(marray1a[1:t,t])
+    r2a[t+1] <- sum(marray2j[1:t,t]) + sum(marray2a[1:t,t])
   }#t
   # m-array cell probabilities for juveniles
   for (t in 1:(nyears-1)) {
@@ -146,6 +159,22 @@ coexcode  <-  nimbleCode({
     # Last column
     pr1j[t,nyears]  <-  1 - sum(pr1j[t,1:(nyears-1)])
     pr2j[t,nyears]  <-  1 - sum(pr2j[t,1:(nyears-1)])
+  } #t
+  # m-array cell probabilities for adults
+  for (t in 1:(nyears-1)){
+    # Main diagonal and above
+    for (j in t:(nyears-1)){
+      pr1a[t,j] <- s1a^(j-t+1) * (1-p1)^(j-t) * p1
+      pr2a[t,j] <- s2a^(j-t+1) * (1-p2)^(j-t) * p2
+    } #j
+    # Below main diagonal
+    for (j in 1:(t-1)){
+      pr1a[t,j] <- 0
+      pr2a[t,j] <- 0
+    } #j
+    # Last column
+    pr1a[t,nyears] <- 1-sum(pr1a[t,1:(nyears-1)])
+    pr2a[t,nyears] <- 1-sum(pr2a[t,1:(nyears-1)])
   } #t
   p1 ~ dunif(0,1)
   p2 ~ dunif(0,1)
@@ -183,8 +212,10 @@ coexconstants  <-  list(nyears=nyears, r1j=r1j, r2j=r2j,
 coexmodel  <-  nimbleModel(coexcode,
                            constants = coexconstants)
 #Set data and initial values
-coexmodel$setData(list(marray1j=marray1j,N1jobs=N1jobs, N1aobs=N1aobs,
-                       fledg1obs=fledg1obs, marray2j=marray2j,
+coexmodel$setData(list(marray1j=marray1j,marray1a=marray1a,
+                       N1jobs=N1jobs, N1aobs=N1aobs,
+                       fledg1obs=fledg1obs,r1a=r1a,r2a=r2a,
+                       marray2j=marray2j, marray2a=marray2a,
                        N2jobs=N2jobs,N2aobs=N2aobs, fledg2obs=fledg2obs))
 coexinitsim <- list(fert1=fert1,fert2=fert2,phi1=phi1,phi2=phi2,s1a=s1a,s2a=s2a,
                     alphs=alphs, betas=betas,
@@ -213,34 +244,39 @@ for (i in 1:nsim) {
                           fledg1obs=ccoexmodel$fledg1obs,
                           fledg2obs=ccoexmodel$fledg2obs,
                           marray1j=ccoexmodel$marray1j,
-                          marray2j=ccoexmodel$marray2j)
+                          marray2j=ccoexmodel$marray2j,
+                          marray1a=ccoexmodel$marray1a,
+                          marray2a=ccoexmodel$marray2a,
+                          r1a=ccoexmodel$r1a,
+                          r2a=ccoexmodel$r2a)
   print(i)  
 }
 #this code bit is just to check that all populations persist
 #until the end of the time series and check the mean pop size then
 nyears.tot <- length(list.simul[[1]][[1]])
 n.simul <- length(list.simul)
-N.simul.1 <- matrix(NA,n.simul,nyears.tot)
-N.simul.2 <- matrix(NA,n.simul,nyears.tot)
+N.simul.a.1 <- matrix(NA,n.simul,nyears.tot)
+N.simul.j.1 <- matrix(NA,n.simul,nyears.tot)
+N.simul.a.2 <- matrix(NA,n.simul,nyears.tot)
+N.simul.j.2 <- matrix(NA,n.simul,nyears.tot)
 N.simul.obs.1<- matrix(NA,n.simul,nyears.tot)
 N.simul.obs.2 <- matrix(NA,n.simul,nyears.tot)
 for (i in 1:n.simul) {
-  for (t in 1:nyears.tot) {
-    N.simul.1[i,t] <- list.simul[[i]]$N1a[t] + list.simul[[i]]$N1j[t]
-    N.simul.2[i,t] <- list.simul[[i]]$N2a[t] + list.simul[[i]]$N2j[t]
-    N.simul.obs.1[i,t] <- list.simul[[i]]$N1aobs[t] + list.simul[[i]]$N1jobs[t]
-    N.simul.obs.2[i,t] <- list.simul[[i]]$N2aobs[t]+ list.simul[[i]]$N2jobs[t]
+    N.simul.j.1[i,] <- list.simul[[i]]$N1j[]
+    N.simul.a.1[i,] <- list.simul[[i]]$N1a[]
+    N.simul.j.2[i,] <- list.simul[[i]]$N2j[]
+    N.simul.a.2[i,] <- list.simul[[i]]$N2a[]
+    N.simul.obs.1[i,] <- list.simul[[i]]$N1aobs[] + list.simul[[i]]$N1jobs[]
+    N.simul.obs.2[i,] <- list.simul[[i]]$N2aobs[]+ list.simul[[i]]$N2jobs[]
   }
-}
+N.simul.1 <- N.simul.a.1 + N.simul.j.1 
+N.simul.2 <- N.simul.a.2 + N.simul.j.2 
 min(N.simul.1[,nyears])
 min(N.simul.2[,nyears])
 mean(N.simul.1[,nyears])
 mean(N.simul.2[,nyears])
 mean(N.simul.1[,nyears]==0)
 mean(N.simul.2[,nyears]==0)
-
-##only keep simulations where no pop goes extinct
-list.simul<- list.simul[which(N.simul.2[,nyears-1]!=0 & N.simul.1[,nyears-1]!=0)]
 #plot one pair of predator-prey abundance time series as illustration 
 plot(1:nyears.tot, N.simul.1[nsim,], type='l', lwd=3, ylim=c(0,max(N.simul.1[nsim,],
                                                                    N.simul.2[nsim,],
@@ -250,29 +286,25 @@ plot(1:nyears.tot, N.simul.1[nsim,], type='l', lwd=3, ylim=c(0,max(N.simul.1[nsi
 lines(1:nyears.tot, N.simul.2[nsim,], type='l', lwd=3, col='blue')
 lines(1:nyears.tot, N.simul.obs.1[nsim,], type='p', lwd=3, col='red')
 lines(1:nyears.tot, N.simul.obs.2[nsim,], type='p', lwd=3, col='blue')
+##only keep simulations where no age class goes to zero (avoid slice samplers issues)
+list.simul<- list.simul[which(apply(N.simul.j.1[,],1,FUN=min)!=0 & apply(N.simul.a.1[,],1,FUN=min)!=0 & 
+                                apply(N.simul.j.2[,],1,FUN=min)!=0 & apply(N.simul.a.2[,],1,FUN=min)!=0)]
+
+length(list.simul)
 #####fit an IPM
-#in case we later want to fit the model on a subset of the time series
-#(e.g. to reach stable population structures)
-nyears.start <- 1
 list.samples <- list()
 for (i in 1) {
   #set simulated data as data
-  marray1j <- matrix(NA,(nyears-1),nyears)
-  marray2j <- matrix(NA,(nyears-1),nyears)
-  marray1j[1:(nyears-1),1:(nyears-1)] <- list.simul[[i]]$marray1j[nyears.start:(nyears.start + nyears-2),
-                                                                  nyears.start:(nyears.start + nyears-2)]
-  marray1j[,nyears] <- list.simul[[i]]$marray1j[nyears.start:(nyears.start + nyears-2),
-                                                (nyears.start + nyears-1):dim(list.simul[[i]]$marray1j)[2]]
-  marray2j[1:(nyears-1),1:(nyears-1)] <- list.simul[[i]]$marray2j[nyears.start:(nyears.start + nyears-2),
-                                                                  nyears.start:(nyears.start + nyears-2)]
-  marray2j[,nyears] <- list.simul[[i]]$marray2j[nyears.start:(nyears.start + nyears-2),
-                                                (nyears.start + nyears-1):dim(list.simul[[i]]$marray2j)[2]]
-  N1jobs <- list.simul[[i]]$N1jobs[nyears.start:(nyears.start + nyears-1)]
-  N1aobs <- list.simul[[i]]$N1aobs[nyears.start:(nyears.start + nyears-1)]
-  fledg1obs <- list.simul[[i]]$fledg1obs[nyears.start:(nyears.start + nyears-1)]
-  N2jobs <- list.simul[[i]]$N2jobs[nyears.start:(nyears.start + nyears-1)]
-  N2aobs <- list.simul[[i]]$N2aobs[nyears.start:(nyears.start + nyears-1)]
-  fledg2obs <- list.simul[[i]]$fledg2obs[nyears.start:(nyears.start + nyears-1)]
+  marray1j <- list.simul[[i]]$marray1j
+  marray2j <- list.simul[[i]]$marray2j
+  marray1a <- list.simul[[i]]$marray1a
+  marray2a <- list.simul[[i]]$marray2a
+  N1jobs <- list.simul[[i]]$N1jobs
+  N1aobs <- list.simul[[i]]$N1aobs
+  fledg1obs <- list.simul[[i]]$fledg1obs
+  N2jobs <- list.simul[[i]]$N2jobs
+  N2aobs <- list.simul[[i]]$N2aobs
+  fledg2obs <- list.simul[[i]]$fledg2obs
 }
 #set values for lognormal priors to be defined as constants
 sdprior <- 0.5
@@ -290,15 +322,17 @@ paramvalues <- list(alphs = alphs, betas = betas,
                     s1a = s1a, s2a = s2a, sdprior = sdprior)
 #set model constants
 coexconstants <- list(nyears=nyears,
-                      r1j=r1j[nyears.start:(nyears.start+nyears-2)],
-                      r2j=r2j[nyears.start:(nyears.start+nyears-2)],
-                      fledg.sample.2=fledg.sample.2[nyears.start:(nyears.start+nyears-1)],
-                      fledg.sample.1=fledg.sample.1[nyears.start:(nyears.start+nyears-1)],
+                      r1j=r1j,
+                      r2j=r2j,
+                      fledg.sample.2=fledg.sample.2,
+                      fledg.sample.1=fledg.sample.1,
                       sdprior=sdprior,
                       fert1priormode=fert1priormode, fert2priormode=fert2priormode,
                       N1jinit=N1jinit, N1ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
-coexdata <- list(marray1j=marray1j,N1jobs=N1jobs,N1aobs=N1aobs,fledg1obs=fledg1obs,
-                 marray2j=marray2j,N2jobs=N2jobs,N2aobs=N2aobs,fledg2obs=fledg2obs)
+coexdata <- list(marray1j=marray1j,marray1a=marray1a,r1a=r1a,
+                 N1jobs=N1jobs,N1aobs=N1aobs,fledg1obs=fledg1obs,
+                 marray2j=marray2j,marray2a=marray2a,r2a=r2a,
+                 N2jobs=N2jobs,N2aobs=N2aobs,fledg2obs=fledg2obs)
 ##initial values different than true values for parameters of interest, different for each of the 2 chains but same 2 sets of values for all snim models
 
 getinits <- function() {list(fert1=exp(fert1priormode),
@@ -322,9 +356,8 @@ getinits <- function() {list(fert1=exp(fert1priormode),
   N1anew=rep(NA,nyears),
   N2anew=rep(NA,nyears))
 }
-set.seed(6)#adjusted to avoid slice samplers getting stuck...
+set.seed(10)#adjust if needed to avoid slice samplers getting stuck...
 coexinits1 <-getinits()
-set.seed(10)
 coexinits2 <-getinits()
 coexinits <- list(coexinits1,coexinits2)
 #Build the model for the IPM
@@ -382,24 +415,20 @@ nchains <- 2
 list.samples[[1]] <- runMCMC(ccoexmcmc,niter=niter,nburnin=nburnin,thin=thin,nchains=nchains,setSeed=T,inits = coexinits)
 for (i in 2:length(list.simul)) {
   #set simulated data as data
-  marray1j <- matrix(NA,(nyears-1),nyears)
-  marray2j <- matrix(NA,(nyears-1),nyears)
-  marray1j[1:(nyears-1),1:(nyears-1)] <- list.simul[[i]]$marray1j[nyears.start:(nyears.start + nyears-2),
-                                                                  nyears.start:(nyears.start + nyears-2)]
-  marray1j[,nyears] <- list.simul[[i]]$marray1j[nyears.start:(nyears.start + nyears-2),
-                                                (nyears.start + nyears-1):dim(list.simul[[i]]$marray1j)[2]]
-  marray2j[1:(nyears-1),1:(nyears-1)] <- list.simul[[i]]$marray2j[nyears.start:(nyears.start + nyears-2),
-                                                                  nyears.start:(nyears.start + nyears-2)]
-  marray2j[,nyears] <- list.simul[[i]]$marray2j[nyears.start:(nyears.start + nyears-2),
-                                                (nyears.start + nyears-1):dim(list.simul[[i]]$marray2j)[2]]
-  N1jobs <- list.simul[[i]]$N1jobs[nyears.start:(nyears.start + nyears-1)]
-  N1aobs <- list.simul[[i]]$N1aobs[nyears.start:(nyears.start + nyears-1)]
-  fledg1obs <- list.simul[[i]]$fledg1obs[nyears.start:(nyears.start + nyears-1)]
-  N2jobs <- list.simul[[i]]$N2jobs[nyears.start:(nyears.start + nyears-1)]
-  N2aobs <- list.simul[[i]]$N2aobs[nyears.start:(nyears.start + nyears-1)]
-  fledg2obs <- list.simul[[i]]$fledg2obs[nyears.start:(nyears.start + nyears-1)]
-  coexdata <- list(marray1j=marray1j,N1jobs=N1jobs,N1aobs=N1aobs,fledg1obs=fledg1obs,
-                   marray2j=marray2j,N2jobs=N2jobs,N2aobs=N2aobs,fledg2obs=fledg2obs)
+  marray1j <- list.simul[[i]]$marray1j
+  marray2j <- list.simul[[i]]$marray2j
+  marray1a <- list.simul[[i]]$marray1a
+  marray2a <- list.simul[[i]]$marray2a
+  N1jobs <- list.simul[[i]]$N1jobs
+  N1aobs <- list.simul[[i]]$N1aobs
+  fledg1obs <- list.simul[[i]]$fledg1obs
+  N2jobs <- list.simul[[i]]$N2jobs
+  N2aobs <- list.simul[[i]]$N2aobs
+  fledg2obs <- list.simul[[i]]$fledg2obs
+  coexdata <- list(marray1j=marray1j,marray1a=marray1a,r1a=r1a,
+                   N1jobs=N1jobs,N1aobs=N1aobs,fledg1obs=fledg1obs,
+                   marray2j=marray2j,marray2a=marray2a,r2a=r2a,
+                   N2jobs=N2jobs,N2aobs=N2aobs,fledg2obs=fledg2obs)
   #set data
   ccoexmodelIPM$setData(coexdata)
   #Run the MCMC
