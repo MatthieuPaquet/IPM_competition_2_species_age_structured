@@ -13,10 +13,18 @@ samplers <- "AF_slice"
 #samplers <- "defaultsamplers"
 #samplers <- "RW_block"
 #Use exponential or lognormal priors for density dependent slope parameters
-PRIOREXP <- F
-if (PRIOREXP){
+#PRIOR <- "EXP"
+#PRIOR <- "LOGLOW"
+PRIOR <- "LOGHIGH"
+if (PRIOR == "EXP") {
   ddpriors <- "ddpriorexp"
-} else {ddpriors <- "ddpriorlognorm"}
+} else {
+  if (PRIOR == "LOGLOW") {
+  ddpriors <- "ddpriorlognormlow"} 
+  else {
+    if (PRIOR == "LOGHIGH") {
+      ddpriors <- "ddpriorlognormhigh"
+    }}}
 #number of simulated datasets
 nsim <- 100
 #sample sizes
@@ -189,21 +197,30 @@ coexcode  <-  nimbleCode({
   phi1 ~ dunif(0,1) #shall we change these priors too?
   phi2 ~ dunif(0,1)
  
-  if (PRIOREXP) {
+  if (PRIOR == "EXP") {
   for (a in 1:2) {
     for (b in 1:2) {
       alphs[a,b] ~ dexp(1)
       betas[a,b] ~ dexp(1)
     }#b
   }#a
-  } else {
+  } else { if (PRIOR == "LOGLOW") {
     for (a in 1:2) {
       for (b in 1:2) {
         alphs[a,b] ~ dlnorm(0.5, 1)
         betas[a,b] ~ dlnorm(0.5, 1)
       }#b
     }#a 
-    }#priors
+    } else {
+      if (PRIOR == "LOGHIGH") {
+        for (a in 1:2) {
+          for (b in 1:2) {
+            alphs[a,b] ~ dlnorm(log(0.8)+0.05, sdlog = sqrt(0.05))
+            betas[a,b] ~ dlnorm(log(0.8)+0.05, sdlog = sqrt(0.05))
+          }#b
+        }#a 
+      }
+      }}#priors
 })
 #change abundances at equilibrium
 coexconstants  <-  list(nyears=nyears, r1j=r1j, r2j=r2j, 

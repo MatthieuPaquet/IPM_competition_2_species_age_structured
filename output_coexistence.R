@@ -8,18 +8,28 @@ samplers <- "AF_slice"
 #samplers <- "defaultsamplers"
 #samplers <- "RW_block"
 #Use exponential or lognormal priors for density dependent slope parameters
-PRIOREXP <- T
-if (PRIOREXP){
+PRIOR <- "EXP"
+#PRIOR <- "LOGLOW"
+#PRIOR <- "LOGHIGH"
+if (PRIOR == "EXP") {
   ddpriors <- "ddpriorexp"
-} else {ddpriors <- "ddpriorlognorm"}
+} else {
+  if (PRIOR == "LOGLOW") {
+    ddpriors <- "ddpriorlognormlow"} 
+  else {
+    if (PRIOR == "LOGHIGH") {
+      ddpriors <- "ddpriorlognormhigh"
+    }}}
 #sample sizes
 nyears <- 30
 nmarked <- 100
+#nmarked <- 1000
+#nmarked <- 10000
 nnests <- 50
 load(file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears",ddpriors,".Rdata",sep=""))
 list2env(paramvalues,.GlobalEnv)
 #If want some plots that takes time to run
-PLOT <- T
+PLOT <- F
 n.simul <- length(list.samples)
 n.param <- dim(list.samples[[1]]$chain1)[2]
 n.years <- length(list.simul[[1]]$N1a)
@@ -407,11 +417,16 @@ xx <- seq(minv,maxv,freqv)
 plot.new()
 par(mfrow=c(2,2))
 beta.overlap <- array(NA,dim=c(2,2,n.simul.conv))
-if (PRIOREXP){#change if the different beta[,] have different priors
+#change if the different beta[,] have different priors
+if (PRIOR == "EXP") {
   betaprior <-  dexp(xx,1)
 } else {
-  betaprior <-  dlnorm(xx,0.5, 1)
-  }
+  if (PRIOR == "LOGLOW") {
+    betaprior <-  dlnorm(xx,0.5, 1)
+    } else {
+    if (PRIOR == "LOGHIGH") {
+      betaprior <-  dlnorm(xx,log(0.8)+0.05, sdlog = sqrt(0.05))
+    }}}
 for (i in 1:n.simul.conv) {
   beta.overlap[1,1,i]<-overlap(betas11est[i,],betaprior,minv,maxv,freqv,expression(beta11),betas[1,1])
   beta.overlap[1,2,i]<-overlap(betas12est[i,],betaprior,minv,maxv,freqv,expression(beta12),betas[1,2])
@@ -426,16 +441,21 @@ xx <- seq(minv,maxv,freqv)
 plot.new()
 par(mfrow=c(2,2))
 alpha.overlap <- array(NA,dim=c(2,2,n.simul.conv))
-if (PRIOREXP){#change if the different alpha[,] have different priors
-  alfaprior <-  dexp(xx,1)
+#change if the different alpha[,] have different priors
+if (PRIOR == "EXP") {
+  alphaprior <-  dexp(xx,1)
 } else {
-  alfaprior <-  dlnorm(xx,0.5, 1)
-}
+  if (PRIOR == "LOGLOW") {
+    alphaprior <-  dlnorm(xx,0.5, 1)
+  } else {
+    if (PRIOR == "LOGHIGH") {
+      alphaprior <-  dlnorm(xx,log(0.8)+0.05, sdlog = sqrt(0.05))
+    }}}
 for (i in 1:n.simul.conv) {
-  alpha.overlap[1,1,i]<-overlap(alphs11est[i,],alfaprior,minv,maxv,freqv,expression(alpha11),alphs[1,1])
-  alpha.overlap[1,2,i]<-overlap(alphs12est[i,],alfaprior,minv,maxv,freqv,expression(alpha12),alphs[1,2])
-  alpha.overlap[2,1,i]<-overlap(alphs21est[i,],alfaprior,minv,maxv,freqv,expression(alpha21),alphs[2,1])
-  alpha.overlap[2,2,i]<-overlap(alphs22est[i,],alfaprior,minv,maxv,freqv,expression(alpha22),alphs[2,2])
+  alpha.overlap[1,1,i]<-overlap(alphs11est[i,],alphaprior,minv,maxv,freqv,expression(alpha11),alphs[1,1])
+  alpha.overlap[1,2,i]<-overlap(alphs12est[i,],alphaprior,minv,maxv,freqv,expression(alpha12),alphs[1,2])
+  alpha.overlap[2,1,i]<-overlap(alphs21est[i,],alphaprior,minv,maxv,freqv,expression(alpha21),alphs[2,1])
+  alpha.overlap[2,2,i]<-overlap(alphs22est[i,],alphaprior,minv,maxv,freqv,expression(alpha22),alphs[2,2])
 }
 summary(alpha.overlap)
 plot.new()
@@ -498,4 +518,5 @@ text("95% Coverages:",x=0.7,y=max(c(summary_inv1[4],summary_inv2[4])+1))
 text(round(summary_inv1[5],2),x=1,y=max(c(summary_inv1[4],summary_inv2[4])+1))
 text(round(summary_inv2[5],2),x=2,y=max(c(summary_inv1[4],summary_inv2[4])+1))
 legend('topright',col="red",legend="true value",pch=19)
-
+save(summary_inv1,summary_inv2,
+     file = paste0("data/summary_data",parameterset,ddpriors,".Rdata"))
