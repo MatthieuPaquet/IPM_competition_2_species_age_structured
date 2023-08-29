@@ -129,7 +129,7 @@ n.simul.conv <- length(list.samples.converg)
 n.samples <- nrow(list.samples.converg[[1]])
 n.param <- length( list.samples.converg[[1]][1,])
 n.n <- 100
-alphs11est <- alphs12est <- alphs21est <- alphs22est <-
+alpha11est <- alpha12est <- alpha21est <- alpha22est <-
   betas11est <- betas12est <- betas21est <- betas22est <-
   fert1est <- fert2est <- phi1est <- phi2est <- s1aest <- s2aest <-
   matrix(NA,n.simul.conv,n.samples)
@@ -146,10 +146,10 @@ svar2est <- array(NA,dim=c(n.simul.conv,n.years-1,n.samples))
 for (s in 1:n.simul.conv) {
   for (i in 1:n.samples) {
     mcmc<-list.samples.converg[[s]][i,]
-    alphs11est[s,i] = mcmc['alphs[1, 1]']
-    alphs21est[s,i] = mcmc['alphs[2, 1]']
-    alphs12est[s,i] = mcmc['alphs[1, 2]']
-    alphs22est[s,i] = mcmc['alphs[2, 2]']
+    alpha11est[s,i] = mcmc['alphs[1, 1]']
+    alpha21est[s,i] = mcmc['alphs[2, 1]']
+    alpha12est[s,i] = mcmc['alphs[1, 2]']
+    alpha22est[s,i] = mcmc['alphs[2, 2]']
     betas11est[s,i] = mcmc['betas[1, 1]']
     betas21est[s,i] = mcmc['betas[2, 1]']
     betas12est[s,i] = mcmc['betas[1, 2]']
@@ -173,15 +173,15 @@ for (s in 1:n.simul.conv) {
 if (PLOT){
   #posterior correlations within functions
   par(mfrow=c(2,2))
-  plot(alphs11est,alphs12est,col=rgb(0,0,0,0.1))
-  plot(fert1est,alphs11est,col=rgb(0,0,0,0.1))
-  plot(fert1est,alphs12est,col=rgb(0,0,0,0.1))
-  scatterplot3d(as.vector(alphs11est),as.vector(alphs12est),as.vector(fert1est),angle=55,color =rgb(0,0,0,alpha=0.1))
+  plot(alpha11est,alpha12est,col=rgb(0,0,0,0.1))
+  plot(fert1est,alpha11est,col=rgb(0,0,0,0.1))
+  plot(fert1est,alpha12est,col=rgb(0,0,0,0.1))
+  scatterplot3d(as.vector(alpha11est),as.vector(alpha12est),as.vector(fert1est),angle=55,color =rgb(0,0,0,alpha=0.1))
   plot.new()
   par(mfrow=c(2,2))
-  plot(alphs22est,alphs21est,col=rgb(0,0,0,0.1))
-  plot(fert2est,alphs22est,col=rgb(0,0,0,0.1))
-  plot(fert2est,alphs21est,col=rgb(0,0,0,0.1))
+  plot(alpha22est,alpha21est,col=rgb(0,0,0,0.1))
+  plot(fert2est,alpha22est,col=rgb(0,0,0,0.1))
+  plot(fert2est,alpha21est,col=rgb(0,0,0,0.1))
   plot.new()
   par(mfrow=c(2,2))
   plot(betas11est,betas12est,col=rgb(0,0,0,0.1))
@@ -223,8 +223,8 @@ for (i in 1:n.n) {
     for (s in 1:n.simul.conv) {
       surv1aest[s,j,i] <- mean(phi1est[s,] / (1 + betas11est[s,] * N1a[j] + betas12est[s,] * N2a[i]))
       surv2aest[s,j,i] <- mean(phi2est[s,] / (1 + betas21est[s,] * N1a[j] + betas22est[s,] * N2a[i]))
-      fec1est[s,j,i] <- mean(fert1est[s,] / (1 + alphs11est[s,] * N1a[j] + alphs12est[s,] * N2a[i]))
-      fec2est[s,j,i] <- mean(fert2est[s,] / (1 + alphs21est[s,] * N1a[j] + alphs22est[s,] * N2a[i]))
+      fec1est[s,j,i] <- mean(fert1est[s,] / (1 + alpha11est[s,] * N1a[j] + alpha12est[s,] * N2a[i]))
+      fec2est[s,j,i] <- mean(fert2est[s,] / (1 + alpha21est[s,] * N1a[j] + alpha22est[s,] * N2a[i]))
     }#s
     surv1aestmean[j,i] <- mean(surv1aest[,j,i])
     surv2aestmean[j,i] <- mean(surv2aest[,j,i])
@@ -327,14 +327,14 @@ inv2 <- D2 / ((1 + betas[2,1] * n1astarsingle) * (1 + alphs[2,1] * n1astarsingle
 #estimate invasion criteria
 D1est <- (fert1est * phi1est) / (1 - s1aest)
 D2est <- (fert2est * phi2est) / (1 - s2aest)
-n1astarsingleest <- ((- alphs11est - betas11est) + sqrt( (alphs11est + betas11est)^2 -
-                                                           4 * alphs11est * betas11est *
-                                                           (-D1est +1))) / (2 * alphs11est * betas11est)
-n2astarsingleest <- ((- alphs22est - betas22est) + sqrt( (alphs22est + betas22est)^2 -
-                                                           4 * alphs22est * betas22est *
-                                                           (-D2est +1))) / (2 * alphs22est * betas22est)
-inv1est <- D1est / ((1 + betas12est * n2astarsingleest) * (1 + alphs12est * n2astarsingleest))
-inv2est <- D2est / ((1 + betas21est * n1astarsingleest) * (1 + alphs21est * n1astarsingleest))
+n1astarsingleest <- ((- alpha11est - betas11est) + sqrt( (alpha11est + betas11est)^2 -
+                                                           4 * alpha11est * betas11est *
+                                                           (-D1est +1))) / (2 * alpha11est * betas11est)
+n2astarsingleest <- ((- alpha22est - betas22est) + sqrt( (alpha22est + betas22est)^2 -
+                                                           4 * alpha22est * betas22est *
+                                                           (-D2est +1))) / (2 * alpha22est * betas22est)
+inv1est <- D1est / ((1 + betas12est * n2astarsingleest) * (1 + alpha12est * n2astarsingleest))
+inv2est <- D2est / ((1 + betas21est * n1astarsingleest) * (1 + alpha21est * n1astarsingleest))
 #traceplots of estimated invasion criteria
 dev.off()
 for (i in 1:n.simul.conv) {
@@ -397,7 +397,7 @@ kernel <- function(y,data,k1) {
   
   n <- length(data)
   h <- k1*min(sd(data),IQR(data)/1.34)/n^0.2	
-  
+
   z <- 0
   for (i in 1:n ) {
     z<-z+delta((y-data[i])/h)
@@ -414,8 +414,7 @@ minv<-0
 maxv<-2
 freqv<-0.1#these can be lowered for final version
 xx <- seq(minv,maxv,freqv)
-plot.new()
-par(mfrow=c(2,2))
+
 beta.overlap <- array(NA,dim=c(2,2,n.simul.conv))
 #change if the different beta[,] have different priors
 if (PRIOR == "EXP") {
@@ -428,20 +427,21 @@ if (PRIOR == "EXP") {
       betaprior <-  dlnorm(xx,log(0.8)+0.05, sdlog = sqrt(0.05))
     }}}
 for (i in 1:n.simul.conv) {
+  if (i==1) {pdf(file=paste0("plots/example_overlap_beta",parameterset,ddpriors,".pdf"),width=8.6,height=8.6)}
+  par(mfrow=c(2,2))
   beta.overlap[1,1,i]<-overlap(betas11est[i,],betaprior,minv,maxv,freqv,expression(beta11),betas[1,1])
   beta.overlap[1,2,i]<-overlap(betas12est[i,],betaprior,minv,maxv,freqv,expression(beta12),betas[1,2])
   beta.overlap[2,1,i]<-overlap(betas21est[i,],betaprior,minv,maxv,freqv,expression(beta21),betas[2,1])
   beta.overlap[2,2,i]<-overlap(betas22est[i,],betaprior,minv,maxv,freqv,expression(beta22),betas[2,2])
+  dev.off()
 }
 summary(beta.overlap)
 minv<-0
 maxv<-2
 freqv<-0.1
 xx <- seq(minv,maxv,freqv)
-plot.new()
-par(mfrow=c(2,2))
 alpha.overlap <- array(NA,dim=c(2,2,n.simul.conv))
-#change if the different alpha[,] have different priors
+#change if the different alphs[,] have different priors
 if (PRIOR == "EXP") {
   alphaprior <-  dexp(xx,1)
 } else {
@@ -452,13 +452,15 @@ if (PRIOR == "EXP") {
       alphaprior <-  dlnorm(xx,log(0.8)+0.05, sdlog = sqrt(0.05))
     }}}
 for (i in 1:n.simul.conv) {
-  alpha.overlap[1,1,i]<-overlap(alphs11est[i,],alphaprior,minv,maxv,freqv,expression(alpha11),alphs[1,1])
-  alpha.overlap[1,2,i]<-overlap(alphs12est[i,],alphaprior,minv,maxv,freqv,expression(alpha12),alphs[1,2])
-  alpha.overlap[2,1,i]<-overlap(alphs21est[i,],alphaprior,minv,maxv,freqv,expression(alpha21),alphs[2,1])
-  alpha.overlap[2,2,i]<-overlap(alphs22est[i,],alphaprior,minv,maxv,freqv,expression(alpha22),alphs[2,2])
-}
+  if (i==1) {pdf(file=paste0("plots/example_overlap_alpha",parameterset,ddpriors,".pdf"),width=8.6,height=8.6)}
+  par(mfrow=c(2,2))
+  alpha.overlap[1,1,i]<-overlap(alpha11est[i,],alphaprior,minv,maxv,freqv,expression(alpha11),alphs[1,1])
+  alpha.overlap[1,2,i]<-overlap(alpha12est[i,],alphaprior,minv,maxv,freqv,expression(alpha12),alphs[1,2])
+  alpha.overlap[2,1,i]<-overlap(alpha21est[i,],alphaprior,minv,maxv,freqv,expression(alpha21),alphs[2,1])
+  alpha.overlap[2,2,i]<-overlap(alpha22est[i,],alphaprior,minv,maxv,freqv,expression(alpha22),alphs[2,2])
+dev.off()
+  }
 summary(alpha.overlap)
-plot.new()
 minv<-0
 maxv<-150
 freqv<-1
@@ -490,21 +492,39 @@ for (i in 1:n.simul.conv) {
 summary(as.vector(phi.overlap))
 getestimates <- function(param,trueval) {
   n.simul.conv <- nrow(param)
-  coverage <- numeric(n.simul.conv)
+  coverage <- higher1 <- lower1 <- numeric(n.simul.conv)
   for (s in 1:n.simul.conv){
-    coverage[s] <- ifelse(quantile(param[s,],0.025)<trueval&trueval<quantile(param[s,],0.975),1,0)
+    coverage[s] <- ifelse(quantile(param[s,],0.025) < trueval&trueval < quantile(param[s,],0.975),1,0)
+    higher1[s] <- ifelse(quantile(param[s,],0.025) > 1,1,0)
+    lower1[s] <- ifelse(quantile(param[s,],0.975) < 1,1,0)
   }#s
-  estimates <- numeric(5)
-  names(estimates) <- c("simul. value","est. mean","2.5%","97.5%","coverage 95%")
+  estimates <- numeric(7)
+  names(estimates) <- c("simul. value","est. mean","2.5%","97.5%","coverage 95%",
+                        "prop. 2.5% Cr bond > 1","prop. 97.5% Cr bond < 1")
   estimates[1] <- trueval
   estimates[2] <- mean(param)
   estimates[3] <- quantile(rowMeans(param),0.025)
   estimates[4] <- quantile(rowMeans(param),0.975)
   estimates[5] <- mean(coverage)
+  estimates[6] <- mean(higher1)
+  estimates[7] <- mean(lower1)
   return(estimates)
 }
 summary_inv1 <- getestimates(inv1est,inv1)
 summary_inv2 <- getestimates(inv2est,inv2)
+summary_alpha <- array(NA,dim=c(2,2,5))#5 is hard coded number of estimates
+summary_beta <- array(NA,dim=c(2,2,5))
+dimnames(summary_alpha)[[3]] <- c("simul. value","est. mean","2.5%","97.5%","coverage 95%")
+dimnames(summary_beta)[[3]] <- c("simul. value","est. mean","2.5%","97.5%","coverage 95%")
+
+summary_alpha[1,1,] <- getestimates(alpha11est,alphs[1,1])[1:5]
+summary_alpha[1,2,] <- getestimates(alpha12est,alphs[1,2])[1:5]
+summary_alpha[2,1,] <- getestimates(alpha21est,alphs[2,1])[1:5]
+summary_alpha[2,2,] <- getestimates(alpha22est,alphs[2,2])[1:5]
+summary_beta[1,1,] <- getestimates(betas11est,betas[1,1])[1:5]
+summary_beta[1,2,] <- getestimates(betas12est,betas[1,2])[1:5]
+summary_beta[2,1,] <- getestimates(betas21est,betas[2,1])[1:5]
+summary_beta[2,2,] <- getestimates(betas22est,betas[2,2])[1:5]
 plot.new()
 par(mfrow = c(1, 1), cex.axis = 0.8, cex.lab = 1, mar = c(10, 3, 3, 3), las = 1)
 plot(main ="Mean estimated invasion criteria",x='n',ylim=c(0,max(c(summary_inv1[4],summary_inv2[4])+2)),xlim=c(0.5,2.5),pch=16,xaxt='n',xlab='',ylab='')
@@ -518,5 +538,48 @@ text("95% Coverages:",x=0.7,y=max(c(summary_inv1[4],summary_inv2[4])+1))
 text(round(summary_inv1[5],2),x=1,y=max(c(summary_inv1[4],summary_inv2[4])+1))
 text(round(summary_inv2[5],2),x=2,y=max(c(summary_inv1[4],summary_inv2[4])+1))
 legend('topright',col="red",legend="true value",pch=19)
-save(summary_inv1,summary_inv2,
+
+getquantiles <- function(mcmcsample) {
+  n.simul.conv <- nrow(mcmcsample)
+  mean.par <- rowMeans(mcmcsample)
+  lower.par <- apply(mcmcsample, 1, quantile, 0.025,  na.rm = TRUE)
+  higher.par <- apply(mcmcsample, 1, quantile, 0.975,  na.rm = TRUE)
+   qt_out <- cbind(mean.par,lower.par,higher.par)
+   colnames(qt_out) <- c("est. mean","2.5%","97.5%")
+  return(qt_out)
+}
+qt_inv1est <- getquantiles(inv1est)
+qt_inv2est <- getquantiles(inv2est)
+competoutcome <- matrix(NA,n.simul.conv,2)
+colnames(competoutcome) <-c("outcome_no_uncertainty","outcome_uncertainty")
+#uncertain
+#coexist
+#1wins
+#2wins
+#priority
+for(i in 1:n.simul.conv) {
+if((qt_inv1est[i,1] > 1 ) & (qt_inv2est[i,1] > 1)) {competoutcome[i,1] <- "coexist"
+} else {
+  if((qt_inv1est[i,1] > 1 ) & (qt_inv2est[i,1] < 1)) {competoutcome[i,1] <- "1wins"
+  } else {
+    if((qt_inv1est[i,1] < 1 ) & (qt_inv2est[i,1] > 1)) {competoutcome[i,1] <- "2wins"
+    } else{
+      if((qt_inv1est[i,1] < 1 ) & (qt_inv2est[i,1] < 1)) {competoutcome[i,1] <- "priority"}
+    }
+  }
+}
+  if((qt_inv1est[i,2] > 1 ) & (qt_inv2est[i,2] > 1)) {competoutcome[i,2] <- "coexist"
+  } else {
+    if((qt_inv1est[i,2] > 1 ) & (qt_inv2est[i,3] < 1)) {competoutcome[i,2] <- "1wins"
+    } else {
+      if((qt_inv1est[i,3] < 1 ) & (qt_inv2est[i,2] > 1)) {competoutcome[i,2] <- "2wins"
+      } else{
+        if((qt_inv1est[i,3] < 1 ) & (qt_inv2est[i,3] < 1)) {competoutcome[i,2] <- "priority"}
+        else {competoutcome[i,2] <- "uncertain"}
+      }
+    }
+  }
+}#i
+competoutcome
+save(competoutcome,qt_inv1est,qt_inv2est,summary_inv1,summary_inv2,summary_alpha,summary_beta,alpha.overlap,beta.overlap,
      file = paste0("data/summary_data",parameterset,ddpriors,".Rdata"))
