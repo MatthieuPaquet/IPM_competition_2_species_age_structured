@@ -816,7 +816,7 @@ plot(x='n',ylim=c(0,12),xlim=c(0,12),pch=16,xlab='Invasion criteria sp. 1',ylab=
 segments(lwd=1,qt_inv1est_par2_priorexp[,2],qt_inv2est_par2_priorexp[,1],qt_inv1est_par2_priorexp[,3],qt_inv2est_par2_priorexp[,1],col="darkgray")
 segments(lwd=1,qt_inv1est_par2_priorexp[,1],qt_inv2est_par2_priorexp[,2],qt_inv1est_par2_priorexp[,1],qt_inv2est_par2_priorexp[,3],col="darkgray")
 points(pch=21,x=qt_inv1est_par2_priorexp[,1],y=qt_inv2est_par2_priorexp[,1],col="black",bg=colors)
-points(x=inv1_par2_priorexp[1],y=inv2_par2_priorexp[1],col=rgb(1,0,0,alpha=0.8),cex=2,pch=19)
+points(x=inv1_par2_priorexp[1],y=inv2_par2_priorexp[1],col=rgb(1,0,0,alpha=0.8),cex=1.5,pch=19)
 abline(h=1,col="red",lty=2)
 abline(v=1,col="red",lty=2)
 mtext("B",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
@@ -828,7 +828,7 @@ plot(x='n',ylim=c(0,12),xlim=c(0,12),pch=16,xlab='Invasion criteria sp. 1',ylab=
 segments(lwd=1,qt_inv1est_par3_priorexp[,2],qt_inv2est_par3_priorexp[,1],qt_inv1est_par3_priorexp[,3],qt_inv2est_par3_priorexp[,1],col="darkgray")
 segments(lwd=1,qt_inv1est_par3_priorexp[,1],qt_inv2est_par3_priorexp[,2],qt_inv1est_par3_priorexp[,1],qt_inv2est_par3_priorexp[,3],col="darkgray")
 points(pch=21,x=qt_inv1est_par3_priorexp[,1],y=qt_inv2est_par3_priorexp[,1],col="black",bg=colors)
-points(x=inv1_par3_priorexp[1],y=inv2_par3_priorexp[1],col=rgb(1,0,0,alpha=0.8),cex=2,pch=19)
+points(x=inv1_par3_priorexp[1],y=inv2_par3_priorexp[1],col=rgb(1,0,0,alpha=0.8),cex=1.5,pch=19)
 abline(h=1,col="red",lty=2)
 abline(v=1,col="red",lty=2)
 
@@ -841,7 +841,7 @@ plot(x='n',ylim=c(0,12),xlim=c(0,12),pch=16,xlab='Invasion criteria sp. 1',ylab=
 segments(lwd=1,qt_inv1est_par4_priorexp[,2],qt_inv2est_par4_priorexp[,1],qt_inv1est_par4_priorexp[,3],qt_inv2est_par4_priorexp[,1],col="darkgray")
 segments(lwd=1,qt_inv1est_par4_priorexp[,1],qt_inv2est_par4_priorexp[,2],qt_inv1est_par4_priorexp[,1],qt_inv2est_par4_priorexp[,3],col="darkgray")
 points(pch=21,x=qt_inv1est_par4_priorexp[,1],y=qt_inv2est_par4_priorexp[,1],col="black",bg=colors)
-points(x=inv1_par4_priorexp[1],y=inv2_par4_priorexp[1],col=rgb(1,0,0,alpha=0.8),cex=2,pch=19)
+points(x=inv1_par4_priorexp[1],y=inv2_par4_priorexp[1],col=rgb(1,0,0,alpha=0.8),cex=1.5,pch=19)
 abline(h=1,col="red",lty=2)
 abline(v=1,col="red",lty=2)
 
@@ -870,7 +870,7 @@ plot(x='n',ylim=c(0,12),xlim=c(0,12),pch=16,xlab='Invasion criteria sp. 1',ylab=
 segments(lwd=1,qt_inv1est_par2_priorlognormlow[,2],qt_inv2est_par2_priorlognormlow[,1],qt_inv1est_par2_priorlognormlow[,3],qt_inv2est_par2_priorlognormlow[,1],col="darkgray")
 segments(lwd=1,qt_inv1est_par2_priorlognormlow[,1],qt_inv2est_par2_priorlognormlow[,2],qt_inv1est_par2_priorlognormlow[,1],qt_inv2est_par2_priorlognormlow[,3],col="darkgray")
 points(pch=21,x=qt_inv1est_par2_priorlognormlow[,1],y=qt_inv2est_par2_priorlognormlow[,1],col="black",bg=colors)
-points(x=inv1_par2_priorlognormlow[1],y=inv2_par2_priorlognormlow[1],col=rgb(1,0,0,alpha=0.8),cex=2,pch=19)
+points(x=inv1_par2_priorlognormlow[1],y=inv2_par2_priorlognormlow[1],col=rgb(1,0,0,alpha=0.8),cex=1.5,pch=19)
 abline(h=1,col="red",lty=2)
 abline(v=1,col="red",lty=2)
 mtext("B",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
@@ -882,7 +882,7 @@ plot(x='n',ylim=c(0,12),xlim=c(0,12),pch=16,xlab='Invasion criteria sp. 1',ylab=
 segments(lwd=1,qt_inv1est_par3_priorlognormlow[,2],qt_inv2est_par3_priorlognormlow[,1],qt_inv1est_par3_priorlognormlow[,3],qt_inv2est_par3_priorlognormlow[,1],col="darkgray")
 segments(lwd=1,qt_inv1est_par3_priorlognormlow[,1],qt_inv2est_par3_priorlognormlow[,2],qt_inv1est_par3_priorlognormlow[,1],qt_inv2est_par3_priorlognormlow[,3],col="darkgray")
 points(pch=21,x=qt_inv1est_par3_priorlognormlow[,1],y=qt_inv2est_par3_priorlognormlow[,1],col="black",bg=colors)
-points(x=inv1_par3_priorlognormlow[1],y=inv2_par3_priorlognormlow[1],col=rgb(1,0,0,alpha=0.8),cex=2,pch=19)
+points(x=inv1_par3_priorlognormlow[1],y=inv2_par3_priorlognormlow[1],col=rgb(1,0,0,alpha=0.8),cex=1.5,pch=19)
 abline(h=1,col="red",lty=2)
 abline(v=1,col="red",lty=2)
 
@@ -895,7 +895,7 @@ plot(x='n',ylim=c(0,12),xlim=c(0,12),pch=16,xlab='Invasion criteria sp. 1',ylab=
 segments(lwd=1,qt_inv1est_par4_priorlognormlow[,2],qt_inv2est_par4_priorlognormlow[,1],qt_inv1est_par4_priorlognormlow[,3],qt_inv2est_par4_priorlognormlow[,1],col="darkgray")
 segments(lwd=1,qt_inv1est_par4_priorlognormlow[,1],qt_inv2est_par4_priorlognormlow[,2],qt_inv1est_par4_priorlognormlow[,1],qt_inv2est_par4_priorlognormlow[,3],col="darkgray")
 points(pch=21,x=qt_inv1est_par4_priorlognormlow[,1],y=qt_inv2est_par4_priorlognormlow[,1],col="black",bg=colors)
-points(x=inv1_par4_priorlognormlow[1],y=inv2_par4_priorlognormlow[1],col=rgb(1,0,0,alpha=0.8),cex=2,pch=19)
+points(x=inv1_par4_priorlognormlow[1],y=inv2_par4_priorlognormlow[1],col=rgb(1,0,0,alpha=0.8),cex=1.5,pch=19)
 abline(h=1,col="red",lty=2)
 abline(v=1,col="red",lty=2)
 
