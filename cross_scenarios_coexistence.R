@@ -902,3 +902,23 @@ abline(v=1,col="red",lty=2)
 mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 legend('topright',legend="Parameter set 4",bty = "n")
 dev.off()
+#plot priors and true values for alpha and beta parameters
+minv<-0
+maxv<-2
+freqv<-0.01
+xx <- seq(minv,maxv,freqv)
+dpriorexp <-  dexp(xx,1)
+dpriorlognormlow <-  dlnorm(xx,0.5, 1)
+dpriorlognormhigh <-  dlnorm(xx,log(0.8)+0.05, sdlog = sqrt(0.05))
+pdf(file=paste("plots/priors.pdf",sep=""),width=8.6,height=8.6)
+plot(xx,dpriorexp,ylim=c(0,2.2),xlim=c(0,2),type="l",pch=16,xlab='Parameter value',ylab='Density')
+points(xx,dpriorlognormlow,lty=2,type="l")
+points(xx,dpriorlognormhigh,lty=3,type="l")
+abline(v=c(paramvalues_1$alphs,paramvalues_1$betas,
+           paramvalues_2$alphs,paramvalues_2$betas,
+           paramvalues_3$alphs,paramvalues_3$betas,
+           paramvalues_4$alphs,paramvalues_4$betas
+),col="red")
+legend("topright", legend=c("Prior 1", "Prior 2", "Prior 3", "True values"),
+       col=c("black", "black","black","red"), lty=c(1,2,3,1), cex=1)
+dev.off()
