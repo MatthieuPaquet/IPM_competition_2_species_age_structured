@@ -329,6 +329,10 @@ sdprior <- 0.5
 fledgrate1Neq1 <- fert1 / (1+alphs[1,1])
 fledgrate2Neq1 <- fert2 / (1+alphs[2,2])
 #prior parameters
+
+#CAREFUL! This is not the mode of the distribution but the \mu parameter
+#change "mode" for "meanlog" if we need to rerun the models
+
 fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
 fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
 #set list of parameter values to save with data

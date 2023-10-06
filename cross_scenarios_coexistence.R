@@ -1,3 +1,4 @@
+library(latex2exp)
 #load the four sets of 100 simulated data and their parameter values
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 load("data/data_coexistence_model_param1AF_slice100juvmarked50nests30nyearsddpriorexp.Rdata")
@@ -921,4 +922,24 @@ abline(v=c(paramvalues_1$alphs,paramvalues_1$betas,
 ),col="red")
 legend("topright", legend=c("Prior 1", "Prior 2", "Prior 3", "True values"),
        col=c("black", "black","black","red"), lty=c(1,2,3,1), cex=1)
+dev.off()
+#plot prior and true values for "fert1 and fert2 (\pi1 and \pi2)
+minv<-0
+maxv<-150
+freqv<-1
+xx <- seq(minv,maxv,freqv)
+#note that fert1priormode (should be named meanlogfert1prior) ,fert2priormode,
+#sdprior, fert1, and fert2 are identical for all perameter sets
+fert1prior <-  dlnorm(xx,paramvalues_1$fert1priormode, sd=paramvalues_1$sdprior)
+fert2prior <-  dlnorm(xx,paramvalues_1$fert2priormode, sd=paramvalues_1$sdprior)
+pdf(file=paste("plots/priors_pi.pdf",sep=""),width=8.6,height=4.3)
+par(mfrow=c(1,2),mar=c(4,3,1,2),omi=c(0.1,0,0.2,0))
+plot(xx,fert1prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,xlab=TeX(r'($\pi_1$)'),ylab='Density')
+abline(v=paramvalues_1$fert1,col="red")
+legend("topright", legend=c("Prior", "True value"),
+       col=c("black","red"), lty=c(1,1), cex=1)
+plot(xx,fert2prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,xlab=TeX(r'($\pi_2$)'),ylab='Density')
+abline(v=paramvalues_1$fert2,col="red")
+legend("topright", legend=c("Prior", "True value"),
+       col=c("black","red"), lty=c(1,1), cex=1)
 dev.off()
