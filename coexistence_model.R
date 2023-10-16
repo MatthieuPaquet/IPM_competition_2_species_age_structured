@@ -14,8 +14,8 @@ samplers <- "AF_slice"
 #samplers <- "RW_block"
 #Use exponential or lognormal priors for density dependent slope parameters
 #PRIOR <- "EXP"
-#PRIOR <- "LOGLOW"
-PRIOR <- "LOGHIGH"
+PRIOR <- "LOGLOW"
+#PRIOR <- "LOGHIGH"
 if (PRIOR == "EXP") {
   ddpriors <- "ddpriorexp"
 } else {
@@ -94,10 +94,10 @@ coexcode  <-  nimbleCode({
   # Likelihood for  count data (state-space model) 
   for (t in 1:nyears) {
     #Observation process
-    N1jobs[t] ~ dlnorm(log(N1j[t]), sd=0.1)
-    N1aobs[t] ~ dlnorm(log(N1a[t]), sd=0.1)
-    N2jobs[t] ~ dlnorm(log(N2j[t]), sd=0.1)
-    N2aobs[t] ~ dlnorm(log(N2a[t]), sd=0.1)
+    N1jobs[t] ~ dpois(N1j[t])
+    N1aobs[t] ~ dpois(N1a[t])
+    N2jobs[t] ~ dpois(N2j[t])
+    N2aobs[t] ~ dpois(N2a[t])
   }#t
   ###demographic stochasticity for the population level parameters
   for (t in 2:nyears) {
@@ -133,8 +133,8 @@ coexcode  <-  nimbleCode({
                                   alphs[2,1] * N1a[t])
   }#t
   #think about the priors
-  fert1 ~ dlnorm(fert1priormode, sd=sdprior)
-  fert2 ~ dlnorm(fert2priormode, sd=sdprior)
+  fert1 ~ dlnorm(fert1priormeanlog, sd=sdprior)
+  fert2 ~ dlnorm(fert2priormeanlog, sd=sdprior)
   #Likelihood for capture-recapture data: CJS model (2 age classes)
   # Multinomial likelihood
   for (t in 1:(nyears-1)) {
@@ -304,8 +304,8 @@ lines(1:nyears.tot, N.simul.2[nsim,], type='l', lwd=3, col='blue')
 lines(1:nyears.tot, N.simul.obs.1[nsim,], type='p', lwd=3, col='red')
 lines(1:nyears.tot, N.simul.obs.2[nsim,], type='p', lwd=3, col='blue')
 ##only keep simulations where no age class goes to zero (avoid slice samplers issues)
-list.simul<- list.simul[which(apply(N.simul.j.1[,],1,FUN=min)!=0 & apply(N.simul.a.1[,],1,FUN=min)!=0 & 
-                                apply(N.simul.j.2[,],1,FUN=min)!=0 & apply(N.simul.a.2[,],1,FUN=min)!=0)]
+#list.simul<- list.simul[which(apply(N.simul.j.1[,],1,FUN=min)!=0 & apply(N.simul.a.1[,],1,FUN=min)!=0 & 
+#                                apply(N.simul.j.2[,],1,FUN=min)!=0 & apply(N.simul.a.2[,],1,FUN=min)!=0)]
 
 length(list.simul)
 #####fit an IPM
@@ -330,15 +330,12 @@ fledgrate1Neq1 <- fert1 / (1+alphs[1,1])
 fledgrate2Neq1 <- fert2 / (1+alphs[2,2])
 #prior parameters
 
-#CAREFUL! This is not the mode of the distribution but the \mu parameter
-#change "mode" for "meanlog" if we need to rerun the models
-
-fert1priormode <- log(fledgrate1Neq1) -(sdprior^2 / 2)
-fert2priormode <- log(fledgrate2Neq1) -(sdprior^2 / 2)
+fert1priormeanlog <- log(fledgrate1Neq1) -(sdprior^2 / 2)
+fert2priormeanlog <- log(fledgrate2Neq1) -(sdprior^2 / 2)
 #set list of parameter values to save with data
 paramvalues <- list(alphs = alphs, betas = betas, 
-                    fert1 = fert1, fert1priormode = fert1priormode,
-                    fert2 = fert2, fert2priormode = fert2priormode,
+                    fert1 = fert1, fert1priormeanlog = fert1priormeanlog,
+                    fert2 = fert2, fert2priormeanlog = fert2priormeanlog,
                     p1 = p1, p2 = p2, phi1 = phi1, phi2 = phi2,
                     s1a = s1a, s2a = s2a, sdprior = sdprior)
 #set model constants
@@ -348,7 +345,7 @@ coexconstants <- list(nyears=nyears,
                       fledg.sample.2=fledg.sample.2,
                       fledg.sample.1=fledg.sample.1,
                       sdprior=sdprior,
-                      fert1priormode=fert1priormode, fert2priormode=fert2priormode,
+                      fert1priormeanlog=fert1priormeanlog, fert2priormeanlog=fert2priormeanlog,
                       N1jinit=N1jinit, N1ainit=N1ainit, N2jinit=N2jinit, N2ainit=N2ainit)#define as data if initial pop size differs among simulations
 coexdata <- list(marray1j=marray1j,marray1a=marray1a,r1a=r1a,
                  N1jobs=N1jobs,N1aobs=N1aobs,fledg1obs=fledg1obs,
@@ -356,8 +353,8 @@ coexdata <- list(marray1j=marray1j,marray1a=marray1a,r1a=r1a,
                  N2jobs=N2jobs,N2aobs=N2aobs,fledg2obs=fledg2obs)
 ##initial values different than true values for parameters of interest, different for each of the 2 chains but same 2 sets of values for all snim models
 
-getinits <- function() {list(fert1=exp(fert1priormode),
-                    fert2=exp(fert2priormode),
+getinits <- function() {list(fert1=fledgrate1Neq1,
+                    fert2=fledgrate2Neq1,
                     phi1=runif(1,0.3,0.9),
                     phi2=runif(1,0.3,0.9),
                     s1a=runif(1,0.4,0.9),

@@ -928,10 +928,10 @@ minv<-0
 maxv<-150
 freqv<-1
 xx <- seq(minv,maxv,freqv)
-#note that fert1priormode (should be named meanlogfert1prior) ,fert2priormode,
+#note that fert1priormeanlog  ,fert2priormeanlog,
 #sdprior, fert1, and fert2 are identical for all perameter sets
-fert1prior <-  dlnorm(xx,paramvalues_1$fert1priormode, sd=paramvalues_1$sdprior)
-fert2prior <-  dlnorm(xx,paramvalues_1$fert2priormode, sd=paramvalues_1$sdprior)
+fert1prior <-  dlnorm(xx,paramvalues_1$fert1priormeanlog, sd=paramvalues_1$sdprior)
+fert2prior <-  dlnorm(xx,paramvalues_1$fert2priormeanlog, sd=paramvalues_1$sdprior)
 pdf(file=paste("plots/priors_pi.pdf",sep=""),width=8.6,height=4.3)
 par(mfrow=c(1,2),mar=c(4,3,1,2),omi=c(0.1,0,0.2,0))
 plot(xx,fert1prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,xlab=TeX(r'($\pi_1$)'),ylab='Density')
