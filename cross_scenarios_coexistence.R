@@ -350,7 +350,7 @@ points(pch=19,x=c(7,7.5,8),c(alpha_par1_priorexp[2,1,1],alpha_par1_priorlognorml
 abline(h=0)
 mtext("A",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 legend('topright',legend="Parameter set 1",bty = "n")
-mtext("Mean estimated intra and inter species interactions on survival (alpha)", side = 3, line = 1, outer = TRUE,cex=1.2)
+mtext("Mean estimated intra and inter species interactions on fecundity (alpha)", side = 3, line = 1, outer = TRUE,cex=1.2)
 
 plot(x='n',ylim=c(0,1.2),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
 segments(lwd=5,c(1,1.5,2),c(alpha_par2_priorexp[1,1,4],alpha_par2_priorlognormlow[1,1,4],alpha_par2_priorlognormhigh[1,1,4]),c(1,1.5,2),c(alpha_par2_priorexp[1,1,3],alpha_par2_priorlognormlow[1,1,3],alpha_par2_priorlognormhigh[1,1,3]))
@@ -677,7 +677,7 @@ points(pch=c(21,22,23),x=c(7,7.5,8),c(alpha_par1_priorexp[2,1,5],alpha_par1_prio
 abline(h=0.95,lty=2,col="red")
 mtext("A",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 legend('topright',legend="Parameter set 1",bty = "n")
-mtext("95% Coverage intra and inter species interactions on survival (alpha)", side = 3, line = 1, outer = TRUE,cex=1.2)
+mtext("95% Coverage intra and inter species interactions on fecundity (alpha)", side = 3, line = 1, outer = TRUE,cex=1.2)
 
 plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
 points(pch=c(21,22,23),x=c(1,1.5,2),c(alpha_par2_priorexp[1,1,5],alpha_par2_priorlognormlow[1,1,5],alpha_par2_priorlognormhigh[1,1,5]),col="black",bg= "#7fa626",cex=2)
