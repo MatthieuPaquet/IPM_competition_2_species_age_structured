@@ -1,4 +1,5 @@
 library(latex2exp)
+library(xtable)
 #load the four sets of 100 simulated data and their parameter values
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 load("data/data_coexistence_model_param1AF_slice100juvmarked50nests30nyearsddpriorexp.Rdata")
@@ -88,7 +89,7 @@ overlap_alpha_par1_priorexp <- alpha.overlap
 overlap_beta_par1_priorexp <- beta.overlap
 qt_inv1est_par1_priorexp <- qt_inv1est
 qt_inv2est_par1_priorexp <- qt_inv2est
-competoutcome_par1_priorexp <-competoutcome
+competoutcome_par1_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -104,7 +105,7 @@ overlap_alpha_par2_priorexp <- alpha.overlap
 overlap_beta_par2_priorexp <- beta.overlap
 qt_inv1est_par2_priorexp <- qt_inv1est
 qt_inv2est_par2_priorexp <- qt_inv2est
-competoutcome_par2_priorexp <-competoutcome
+competoutcome_par2_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -120,7 +121,7 @@ overlap_alpha_par3_priorexp <- alpha.overlap
 overlap_beta_par3_priorexp <- beta.overlap
 qt_inv1est_par3_priorexp <- qt_inv1est
 qt_inv2est_par3_priorexp <- qt_inv2est
-competoutcome_par3_priorexp <-competoutcome
+competoutcome_par3_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -136,7 +137,7 @@ overlap_alpha_par4_priorexp <- alpha.overlap
 overlap_beta_par4_priorexp <- beta.overlap
 qt_inv1est_par4_priorexp <- qt_inv1est
 qt_inv2est_par4_priorexp <- qt_inv2est
-competoutcome_par4_priorexp <-competoutcome
+competoutcome_par4_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -152,7 +153,7 @@ overlap_alpha_par1_priorlognormlow <- alpha.overlap
 overlap_beta_par1_priorlognormlow <- beta.overlap
 qt_inv1est_par1_priorlognormlow <- qt_inv1est
 qt_inv2est_par1_priorlognormlow <- qt_inv2est
-competoutcome_par1_priorlognormlow <-competoutcome
+competoutcome_par1_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -168,7 +169,7 @@ overlap_alpha_par2_priorlognormlow <- alpha.overlap
 overlap_beta_par2_priorlognormlow <- beta.overlap
 qt_inv1est_par2_priorlognormlow <- qt_inv1est
 qt_inv2est_par2_priorlognormlow <- qt_inv2est
-competoutcome_par2_priorlognormlow <-competoutcome
+competoutcome_par2_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -184,7 +185,7 @@ overlap_alpha_par3_priorlognormlow <- alpha.overlap
 overlap_beta_par3_priorlognormlow <- beta.overlap
 qt_inv1est_par3_priorlognormlow <- qt_inv1est
 qt_inv2est_par3_priorlognormlow <- qt_inv2est
-competoutcome_par3_priorlognormlow <-competoutcome
+competoutcome_par3_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -200,7 +201,7 @@ overlap_alpha_par4_priorlognormlow <- alpha.overlap
 overlap_beta_par4_priorlognormlow <- beta.overlap
 qt_inv1est_par4_priorlognormlow <- qt_inv1est
 qt_inv2est_par4_priorlognormlow <- qt_inv2est
-competoutcome_par4_priorlognormlow <-competoutcome
+competoutcome_par4_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -216,7 +217,7 @@ overlap_alpha_par1_priorlognormhigh <- alpha.overlap
 overlap_beta_par1_priorlognormhigh <- beta.overlap
 qt_inv1est_par1_priorlognormhigh <- qt_inv1est
 qt_inv2est_par1_priorlognormhigh <- qt_inv2est
-competoutcome_par1_priorlognormhigh <-competoutcome
+competoutcome_par1_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -232,7 +233,7 @@ overlap_alpha_par2_priorlognormhigh <- alpha.overlap
 overlap_beta_par2_priorlognormhigh <- beta.overlap
 qt_inv1est_par2_priorlognormhigh <- qt_inv1est
 qt_inv2est_par2_priorlognormhigh <- qt_inv2est
-competoutcome_par2_priorlognormhigh <-competoutcome
+competoutcome_par2_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -248,7 +249,7 @@ overlap_alpha_par3_priorlognormhigh <- alpha.overlap
 overlap_beta_par3_priorlognormhigh <- beta.overlap
 qt_inv1est_par3_priorlognormhigh <- qt_inv1est
 qt_inv2est_par3_priorlognormhigh <- qt_inv2est
-competoutcome_par3_priorlognormhigh <-competoutcome
+competoutcome_par3_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
@@ -264,13 +265,49 @@ overlap_alpha_par4_priorlognormhigh <- alpha.overlap
 overlap_beta_par4_priorlognormhigh <- beta.overlap
 qt_inv1est_par4_priorlognormhigh <- qt_inv1est
 qt_inv2est_par4_priorlognormhigh <- qt_inv2est
-competoutcome_par4_priorlognormhigh <-competoutcome
+competoutcome_par4_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
        qt_inv2est,
        competoutcome)
+#write and save table summarizing outcome of competition with and without uncertainty
+getrowtable <- function(competoutcome) {
+  table <- matrix(NA,nrow=2,ncol=6)
+  table[1,1] <- "No" #uncertainty accounted for?
+  table[2,1] <- "Yes"
+  table[1,2] <- sum(competoutcome[,"outcome_no_uncertainty"]=="coexist") 
+  table[2,2] <- sum(competoutcome[,"outcome_uncertainty"]=="coexist")
+  table[1,3] <- sum(competoutcome[,"outcome_no_uncertainty"]=="1wins") 
+  table[2,3] <- sum(competoutcome[,"outcome_uncertainty"]=="1wins" )
+  table[1,4] <- sum(competoutcome[,"outcome_no_uncertainty"]=="2wins") 
+  table[2,4] <- sum(competoutcome[,"outcome_uncertainty"]=="2wins" ) 
+  table[1,5] <- sum(competoutcome[,"outcome_no_uncertainty"]=="priority") 
+  table[2,5] <- sum(competoutcome[,"outcome_uncertainty"]=="priority" )
+  table[1,6] <- sum(competoutcome[,"outcome_no_uncertainty"]=="uncertain") 
+  table[2,6] <- sum(competoutcome[,"outcome_uncertainty"]=="uncertain") 
+  return(table)
+}
+tableresults <- matrix(NA,nrow=24,ncol=8)
+colnames(tableresults) <- c("Prior","Parameter set","Uncertainty","Coexist","Sp.1 wins","Sp.2 wins","Priority","Uncertain")
+tableresults[,"Prior"] <- c(rep(1,8),rep(2,8),rep(3,8))
+tableresults[,"Parameter set"] <- rep(rep(1:4, each = 2),3)
+tableresults[c(1,2),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par1_priorexp)
+tableresults[c(3,4),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par2_priorexp)
+tableresults[c(5,6),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par3_priorexp)
+tableresults[c(7,8),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par4_priorexp)
+tableresults[c(9,10),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par1_priorlognormlow)
+tableresults[c(11,12),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par2_priorlognormlow)
+tableresults[c(13,14),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par3_priorlognormlow)
+tableresults[c(15,16),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par4_priorlognormlow)
+tableresults[c(17,18),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par1_priorlognormhigh)
+tableresults[c(19,20),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par2_priorlognormhigh)
+tableresults[c(21,22),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par3_priorlognormhigh)
+tableresults[c(23,24),c(3:ncol(tableresults))] <- getrowtable(competoutcome_par4_priorlognormhigh)
+print(xtable(tableresults),include.rownames=FALSE)
+write.csv(tableresults,file="plots/tableresults_coexistence.csv")
+
 pdf(file=paste("plots/compare_invasion.pdf",sep=""),width=8.6,height=8.6)
 par(mfrow=c(2,2),mar=c(2,3,2,2),omi=c(0.1,0,0.5,0))
 
