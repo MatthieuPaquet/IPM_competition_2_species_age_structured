@@ -583,3 +583,4 @@ if((qt_inv1est[i,1] > 1 ) & (qt_inv2est[i,1] > 1)) {competoutcome[i,1] <- "coexi
 competoutcome
 save(competoutcome,qt_inv1est,qt_inv2est,summary_inv1,summary_inv2,summary_alpha,summary_beta,alpha.overlap,beta.overlap,
      file = paste0("data/summary_data",parameterset,ddpriors,".Rdata"))
+sessionInfo()

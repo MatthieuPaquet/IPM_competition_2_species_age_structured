@@ -456,3 +456,4 @@ for (i in 2:length(list.simul)) {
   save(paramvalues, list.simul, coexconstants,list.samples, file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears",ddpriors,".Rdata",sep=""))
   print(i)
 }
+sessionInfo()

@@ -980,3 +980,4 @@ abline(v=paramvalues_1$fert2,col="red")
 legend("topright", legend=c("Prior", "True value"),
        col=c("black","red"), lty=c(1,1), cex=1)
 dev.off()
+sessionInfo()
