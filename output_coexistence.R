@@ -23,8 +23,6 @@ if (PRIOR == "EXP") {
 #sample sizes
 nyears <- 30
 nmarked <- 100
-#nmarked <- 1000
-#nmarked <- 10000
 nnests <- 50
 load(file = paste("data/data_coexistence_model_param",parameterset,samplers,nmarked,"juvmarked",nnests,"nests",nyears,"nyears",ddpriors,".Rdata",sep=""))
 list2env(paramvalues,.GlobalEnv)
@@ -311,7 +309,7 @@ surv1star <- phi1 / (1+betas[1,1] * N1astar + betas[1,2] * N2astar)
 surv2star <- phi2 / (1+betas[2,1] * N1astar + betas[2,2] * N2astar)
 fec1star <- fert1 / (1+alphs[1,1] * N1astar + alphs[1,2] * N2astar)
 fec2star <- fert2 / (1+alphs[2,2] * N2astar + alphs[2,1] * N1astar)
-###WORK IN PROGRESS
+
 # CALCULATE THE INVASION CRITERIAS FROM THE TRUE PARAMETER VALUES
 #note that since gamma (stage transition probability) is set to 1, C=0
 D1 <- (fert1 * phi1) / (1 - s1a)
@@ -346,15 +344,48 @@ for (i in 1:n.simul.conv) {
   points(inv2est[i,c(((dim(inv2est)[2]/2)+1):dim(inv2est)[2])],type="l",col="red")
   abline(h=inv2,col="green")
 }#i
-##some prior posterior overlaps
 
+#Fujiwara criteria for fecundity and survival to check coexistence outcomes
+#simplified since gamma=1
+
+#compute true values
+f1 <- (1 / phi1) * (1 - s1a)
+f2 <- (1 / phi2) * (1-  s2a)
+Rf1 <- (fert1 / f1) - 1
+Rf2 <- (fert2 / f2) - 1
+Ralpha1 <- (Rf1 / Rf2) * (alphs[2,2] / alphs[1,2])
+Ralpha2 <- (Rf2 / Rf1) * (alphs[1,1] / alphs[2,1])
+Ralpha1
+Ralpha2
+s1 <- (1 - s1a) / fert1
+s2 <- (1 - s2a) / fert2
+Rs1 <- (phi1 / s1) - 1
+Rs2 <- (phi2 / s2) - 1
+Rbeta1 <- (Rs1/Rs2) * (betas[2,2] / betas[1,2])
+Rbeta2 <- (Rs2/Rs1) * (betas[1,1] / betas[2,1])
+Rbeta1
+Rbeta2
+#compute posterior (estimated) values
+f1est <- (1 / phi1est) * (1 - s1aest)
+f2est <- (1 / phi2est) * (1 - s2aest)
+Rf1est <- (fert1est / f1est) - 1
+Rf2est <- (fert2est / f2est) - 1
+Ralpha1est <- (Rf1est / Rf2est) * (alpha22est / alpha12est)
+Ralpha2est <- (Rf2est / Rf1est) * (alpha11est / alpha21est)
+
+s1est <- (1 - s1aest) / fert1est
+s2est <- (1 - s2aest) / fert2est
+Rs1est <- (phi1est / s1est) - 1
+Rs2est <- (phi2est / s2est) - 1
+Rbeta1est <- (Rs1est / Rs2est) * (betas22est / betas12est)
+Rbeta2est <- (Rs2est / Rs1est) * (betas11est / betas21est)
+
+##some prior posterior overlaps
 #==========================================================
-#==========================================================
-# R code for Book Parameter Redundancy and Identifiability
+# R code adapted from Book Parameter Redundancy and Identifiability
 # by Diana J. Cole
 # R code is for Immigration Integrated Model
 # Section 9.2.2
-#==========================================================
 #==========================================================
 overlap <- function(data,prior,minv,maxv,freqv,xlabel,truevalue) {
   # OVERLAP calculates the proportion overlap between the
@@ -512,6 +543,10 @@ getestimates <- function(param,trueval) {
 }
 summary_inv1 <- getestimates(inv1est,inv1)
 summary_inv2 <- getestimates(inv2est,inv2)
+summary_Ralpha1 <- getestimates(Ralpha1est,Ralpha1)
+summary_Ralpha2 <- getestimates(Ralpha2est,Ralpha2)
+summary_Rbeta1 <- getestimates(Rbeta1est,Rbeta1)
+summary_Rbeta2 <- getestimates(Rbeta2est,Rbeta2)
 summary_alpha <- array(NA,dim=c(2,2,5))#5 is hard coded number of estimates
 summary_beta <- array(NA,dim=c(2,2,5))
 dimnames(summary_alpha)[[3]] <- c("simul. value","est. mean","2.5%","97.5%","coverage 95%")
@@ -581,6 +616,8 @@ if((qt_inv1est[i,1] > 1 ) & (qt_inv2est[i,1] > 1)) {competoutcome[i,1] <- "coexi
   }
 }#i
 competoutcome
-save(competoutcome,qt_inv1est,qt_inv2est,summary_inv1,summary_inv2,summary_alpha,summary_beta,alpha.overlap,beta.overlap,
+save(competoutcome,qt_inv1est,qt_inv2est,summary_inv1,summary_inv2,
+     summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
+     summary_alpha,summary_beta,alpha.overlap,beta.overlap,
      file = paste0("data/summary_data",parameterset,ddpriors,".Rdata"))
 sessionInfo()

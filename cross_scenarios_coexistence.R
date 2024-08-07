@@ -83,6 +83,10 @@ dev.off()
 load("data/summary_data1ddpriorexp.Rdata")
 inv1_par1_priorexp <- summary_inv1
 inv2_par1_priorexp <- summary_inv2
+Ralpha1_par1_priorexp <- summary_Ralpha1
+Ralpha2_par1_priorexp <- summary_Ralpha2
+Rbeta1_par1_priorexp <- summary_Rbeta1
+Rbeta2_par1_priorexp <- summary_Rbeta2
 alpha_par1_priorexp <- summary_alpha
 beta_par1_priorexp <- summary_beta
 overlap_alpha_par1_priorexp <- alpha.overlap
@@ -91,6 +95,7 @@ qt_inv1est_par1_priorexp <- qt_inv1est
 qt_inv2est_par1_priorexp <- qt_inv2est
 competoutcome_par1_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -99,6 +104,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data2ddpriorexp.Rdata")
 inv1_par2_priorexp <- summary_inv1
 inv2_par2_priorexp <- summary_inv2
+Ralpha1_par2_priorexp <- summary_Ralpha1
+Ralpha2_par2_priorexp <- summary_Ralpha2
+Rbeta1_par2_priorexp <- summary_Rbeta1
+Rbeta2_par2_priorexp <- summary_Rbeta2
 alpha_par2_priorexp <- summary_alpha
 beta_par2_priorexp <- summary_beta
 overlap_alpha_par2_priorexp <- alpha.overlap
@@ -107,6 +116,7 @@ qt_inv1est_par2_priorexp <- qt_inv1est
 qt_inv2est_par2_priorexp <- qt_inv2est
 competoutcome_par2_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -115,6 +125,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data3ddpriorexp.Rdata")
 inv1_par3_priorexp <- summary_inv1
 inv2_par3_priorexp <- summary_inv2
+Ralpha1_par3_priorexp <- summary_Ralpha1
+Ralpha2_par3_priorexp <- summary_Ralpha2
+Rbeta1_par3_priorexp <- summary_Rbeta1
+Rbeta2_par3_priorexp <- summary_Rbeta2
 alpha_par3_priorexp <- summary_alpha
 beta_par3_priorexp <- summary_beta
 overlap_alpha_par3_priorexp <- alpha.overlap
@@ -123,6 +137,7 @@ qt_inv1est_par3_priorexp <- qt_inv1est
 qt_inv2est_par3_priorexp <- qt_inv2est
 competoutcome_par3_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -131,6 +146,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data4ddpriorexp.Rdata")
 inv1_par4_priorexp <- summary_inv1
 inv2_par4_priorexp <- summary_inv2
+Ralpha1_par4_priorexp <- summary_Ralpha1
+Ralpha2_par4_priorexp <- summary_Ralpha2
+Rbeta1_par4_priorexp <- summary_Rbeta1
+Rbeta2_par4_priorexp <- summary_Rbeta2
 alpha_par4_priorexp <- summary_alpha
 beta_par4_priorexp <- summary_beta
 overlap_alpha_par4_priorexp <- alpha.overlap
@@ -139,6 +158,7 @@ qt_inv1est_par4_priorexp <- qt_inv1est
 qt_inv2est_par4_priorexp <- qt_inv2est
 competoutcome_par4_priorexp <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -147,6 +167,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data1ddpriorlognormlow.Rdata")
 inv1_par1_priorlognormlow <- summary_inv1
 inv2_par1_priorlognormlow <- summary_inv2
+Ralpha1_par1_priorlognormlow <- summary_Ralpha1
+Ralpha2_par1_priorlognormlow <- summary_Ralpha2
+Rbeta1_par1_priorlognormlow <- summary_Rbeta1
+Rbeta2_par1_priorlognormlow <- summary_Rbeta2
 alpha_par1_priorlognormlow <- summary_alpha
 beta_par1_priorlognormlow <- summary_beta
 overlap_alpha_par1_priorlognormlow <- alpha.overlap
@@ -155,6 +179,7 @@ qt_inv1est_par1_priorlognormlow <- qt_inv1est
 qt_inv2est_par1_priorlognormlow <- qt_inv2est
 competoutcome_par1_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -163,6 +188,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data2ddpriorlognormlow.Rdata")
 inv1_par2_priorlognormlow <- summary_inv1
 inv2_par2_priorlognormlow <- summary_inv2
+Ralpha1_par2_priorlognormlow <- summary_Ralpha1
+Ralpha2_par2_priorlognormlow <- summary_Ralpha2
+Rbeta1_par2_priorlognormlow <- summary_Rbeta1
+Rbeta2_par2_priorlognormlow <- summary_Rbeta2
 alpha_par2_priorlognormlow <- summary_alpha
 beta_par2_priorlognormlow <- summary_beta
 overlap_alpha_par2_priorlognormlow <- alpha.overlap
@@ -171,6 +200,7 @@ qt_inv1est_par2_priorlognormlow <- qt_inv1est
 qt_inv2est_par2_priorlognormlow <- qt_inv2est
 competoutcome_par2_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -179,6 +209,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data3ddpriorlognormlow.Rdata")
 inv1_par3_priorlognormlow <- summary_inv1
 inv2_par3_priorlognormlow <- summary_inv2
+Ralpha1_par3_priorlognormlow <- summary_Ralpha1
+Ralpha2_par3_priorlognormlow <- summary_Ralpha2
+Rbeta1_par3_priorlognormlow <- summary_Rbeta1
+Rbeta2_par3_priorlognormlow <- summary_Rbeta2
 alpha_par3_priorlognormlow <- summary_alpha
 beta_par3_priorlognormlow <- summary_beta
 overlap_alpha_par3_priorlognormlow <- alpha.overlap
@@ -187,6 +221,7 @@ qt_inv1est_par3_priorlognormlow <- qt_inv1est
 qt_inv2est_par3_priorlognormlow <- qt_inv2est
 competoutcome_par3_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -195,6 +230,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data4ddpriorlognormlow.Rdata")
 inv1_par4_priorlognormlow <- summary_inv1
 inv2_par4_priorlognormlow <- summary_inv2
+Ralpha1_par4_priorlognormlow <- summary_Ralpha1
+Ralpha2_par4_priorlognormlow <- summary_Ralpha2
+Rbeta1_par4_priorlognormlow <- summary_Rbeta1
+Rbeta2_par4_priorlognormlow <- summary_Rbeta2
 alpha_par4_priorlognormlow <- summary_alpha
 beta_par4_priorlognormlow <- summary_beta
 overlap_alpha_par4_priorlognormlow <- alpha.overlap
@@ -203,6 +242,7 @@ qt_inv1est_par4_priorlognormlow <- qt_inv1est
 qt_inv2est_par4_priorlognormlow <- qt_inv2est
 competoutcome_par4_priorlognormlow <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -211,6 +251,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data1ddpriorlognormhigh.Rdata")
 inv1_par1_priorlognormhigh <- summary_inv1
 inv2_par1_priorlognormhigh <- summary_inv2
+Ralpha1_par1_priorlognormhigh <- summary_Ralpha1
+Ralpha2_par1_priorlognormhigh <- summary_Ralpha2
+Rbeta1_par1_priorlognormhigh <- summary_Rbeta1
+Rbeta2_par1_priorlognormhigh <- summary_Rbeta2
 alpha_par1_priorlognormhigh <- summary_alpha
 beta_par1_priorlognormhigh <- summary_beta
 overlap_alpha_par1_priorlognormhigh <- alpha.overlap
@@ -219,6 +263,7 @@ qt_inv1est_par1_priorlognormhigh <- qt_inv1est
 qt_inv2est_par1_priorlognormhigh <- qt_inv2est
 competoutcome_par1_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -227,6 +272,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data2ddpriorlognormhigh.Rdata")
 inv1_par2_priorlognormhigh <- summary_inv1
 inv2_par2_priorlognormhigh <- summary_inv2
+Ralpha1_par2_priorlognormhigh <- summary_Ralpha1
+Ralpha2_par2_priorlognormhigh <- summary_Ralpha2
+Rbeta1_par2_priorlognormhigh <- summary_Rbeta1
+Rbeta2_par2_priorlognormhigh <- summary_Rbeta2
 alpha_par2_priorlognormhigh <- summary_alpha
 beta_par2_priorlognormhigh <- summary_beta
 overlap_alpha_par2_priorlognormhigh <- alpha.overlap
@@ -235,6 +284,7 @@ qt_inv1est_par2_priorlognormhigh <- qt_inv1est
 qt_inv2est_par2_priorlognormhigh <- qt_inv2est
 competoutcome_par2_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -243,6 +293,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data3ddpriorlognormhigh.Rdata")
 inv1_par3_priorlognormhigh <- summary_inv1
 inv2_par3_priorlognormhigh <- summary_inv2
+Ralpha1_par3_priorlognormhigh <- summary_Ralpha1
+Ralpha2_par3_priorlognormhigh <- summary_Ralpha2
+Rbeta1_par3_priorlognormhigh <- summary_Rbeta1
+Rbeta2_par3_priorlognormhigh <- summary_Rbeta2
 alpha_par3_priorlognormhigh <- summary_alpha
 beta_par3_priorlognormhigh <- summary_beta
 overlap_alpha_par3_priorlognormhigh <- alpha.overlap
@@ -251,6 +305,7 @@ qt_inv1est_par3_priorlognormhigh <- qt_inv1est
 qt_inv2est_par3_priorlognormhigh <- qt_inv2est
 competoutcome_par3_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -259,6 +314,10 @@ remove(summary_inv1,summary_inv2,
 load("data/summary_data4ddpriorlognormhigh.Rdata")
 inv1_par4_priorlognormhigh <- summary_inv1
 inv2_par4_priorlognormhigh <- summary_inv2
+Ralpha1_par4_priorlognormhigh <- summary_Ralpha1
+Ralpha2_par4_priorlognormhigh <- summary_Ralpha2
+Rbeta1_par4_priorlognormhigh <- summary_Rbeta1
+Rbeta2_par4_priorlognormhigh <- summary_Rbeta2
 alpha_par4_priorlognormhigh <- summary_alpha
 beta_par4_priorlognormhigh <- summary_beta
 overlap_alpha_par4_priorlognormhigh <- alpha.overlap
@@ -267,6 +326,7 @@ qt_inv1est_par4_priorlognormhigh <- qt_inv1est
 qt_inv2est_par4_priorlognormhigh <- qt_inv2est
 competoutcome_par4_priorlognormhigh <- competoutcome
 remove(summary_inv1,summary_inv2,
+       summary_Ralpha1,summary_Ralpha2,summary_Rbeta1,summary_Rbeta2,
        summary_alpha,summary_beta,
        alpha.overlap,beta.overlap,
        qt_inv1est,
@@ -360,6 +420,95 @@ abline(h=1)
 legend('topleft',legend="Parameter set 4",bty = "n")
 mtext(par(las=1),text=c("Species 1","Species 2"),
       at=c(1.5,3.5),line=1)
+mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topright',col=c("black","black","black",'red'),legend=c("prior 1","prior 2","prior 3","true value"),pch=c(21,22,23,19))
+dev.off()
+
+######### Fujiwara invasion for alpha and beta
+pdf(file=paste("plots/compare_Rinvasion.pdf",sep=""),width=8.6,height=8.6)
+par(mfrow=c(2,2),mar=c(2,3,2,2),omi=c(0.1,0,0.5,0))
+
+plot(x='n',ylim=c(0,15),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+segments(lwd=5,c(1,1.5,2),c(Ralpha1_par1_priorexp[4],Ralpha1_par1_priorlognormlow[4],Ralpha1_par1_priorlognormhigh[4]),c(1,1.5,2),c(Ralpha1_par1_priorexp[3],Ralpha1_par1_priorlognormlow[3],Ralpha1_par1_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par1_priorexp[2],Ralpha1_par1_priorlognormlow[2],Ralpha1_par1_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(1,1.5,2),c(Ralpha1_par1_priorexp[1],Ralpha1_par1_priorlognormlow[1],Ralpha1_par1_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(3,3.5,4),c(Ralpha2_par1_priorexp[4],Ralpha2_par1_priorlognormlow[4],Ralpha2_par1_priorlognormhigh[4]),c(3,3.5,4),c(Ralpha2_par1_priorexp[3],Ralpha2_par1_priorlognormlow[3],Ralpha2_par1_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par1_priorexp[2],Ralpha2_par1_priorlognormlow[2],Ralpha2_par1_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(3,3.5,4),c(Ralpha2_par1_priorexp[1],Ralpha2_par1_priorlognormlow[1],Ralpha2_par1_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(5,5.5,6),c(Rbeta1_par1_priorexp[4],Rbeta1_par1_priorlognormlow[4],Rbeta1_par1_priorlognormhigh[4]),c(5,5.5,6),c(Rbeta1_par1_priorexp[3],Rbeta1_par1_priorlognormlow[3],Rbeta1_par1_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par1_priorexp[2],Rbeta1_par1_priorlognormlow[2],Rbeta1_par1_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(5,5.5,6),c(Rbeta1_par1_priorexp[1],Rbeta1_par1_priorlognormlow[1],Rbeta1_par1_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(7,7.5,8),c(Rbeta2_par1_priorexp[4],Rbeta2_par1_priorlognormlow[4],Rbeta2_par1_priorlognormhigh[4]),c(7,7.5,8),c(Rbeta2_par1_priorexp[3],Rbeta2_par1_priorlognormlow[3],Rbeta2_par1_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par1_priorexp[2],Rbeta2_par1_priorlognormlow[2],Rbeta2_par1_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(7,7.5,8),c(Rbeta2_par1_priorexp[1],Rbeta2_par1_priorlognormlow[1],Rbeta2_par1_priorlognormhigh[1]),col="red",cex=1)
+abline(h=1)
+mtext("A",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topleft',legend="Parameter set 1",bty = "n")
+plot(x='n',ylim=c(0,15),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+segments(lwd=5,c(1,1.5,2),c(Ralpha1_par2_priorexp[4],Ralpha1_par2_priorlognormlow[4],Ralpha1_par2_priorlognormhigh[4]),c(1,1.5,2),c(Ralpha1_par2_priorexp[3],Ralpha1_par2_priorlognormlow[3],Ralpha1_par2_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par2_priorexp[2],Ralpha1_par2_priorlognormlow[2],Ralpha1_par2_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(1,1.5,2),c(Ralpha1_par2_priorexp[1],Ralpha1_par2_priorlognormlow[1],Ralpha1_par2_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(3,3.5,4),c(Ralpha2_par2_priorexp[4],Ralpha2_par2_priorlognormlow[4],Ralpha2_par2_priorlognormhigh[4]),c(3,3.5,4),c(Ralpha2_par2_priorexp[3],Ralpha2_par2_priorlognormlow[3],Ralpha2_par2_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par2_priorexp[2],Ralpha2_par2_priorlognormlow[2],Ralpha2_par2_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(3,3.5,4),c(Ralpha2_par2_priorexp[1],Ralpha2_par2_priorlognormlow[1],Ralpha2_par2_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(5,5.5,6),c(Rbeta1_par2_priorexp[4],Rbeta1_par2_priorlognormlow[4],Rbeta1_par2_priorlognormhigh[4]),c(5,5.5,6),c(Rbeta1_par2_priorexp[3],Rbeta1_par2_priorlognormlow[3],Rbeta1_par2_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par2_priorexp[2],Rbeta1_par2_priorlognormlow[2],Rbeta1_par2_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(5,5.5,6),c(Rbeta1_par2_priorexp[1],Rbeta1_par2_priorlognormlow[1],Rbeta1_par2_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(7,7.5,8),c(Rbeta2_par2_priorexp[4],Rbeta2_par2_priorlognormlow[4],Rbeta2_par2_priorlognormhigh[4]),c(7,7.5,8),c(Rbeta2_par2_priorexp[3],Rbeta2_par2_priorlognormlow[3],Rbeta2_par2_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par2_priorexp[2],Rbeta2_par2_priorlognormlow[2],Rbeta2_par2_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(7,7.5,8),c(Rbeta2_par2_priorexp[1],Rbeta2_par2_priorlognormlow[1],Rbeta2_par2_priorlognormhigh[1]),col="red",cex=1)
+abline(h=1)
+mtext("B",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topleft',legend="Parameter set 2",bty = "n")
+mtext("Mean estimated invasion criteria", side = 3, line = 1, outer = TRUE,cex=1.2)
+plot(x='n',ylim=c(0,10),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+segments(lwd=5,c(1,1.5,2),c(Ralpha1_par3_priorexp[4],Ralpha1_par3_priorlognormlow[4],Ralpha1_par3_priorlognormhigh[4]),c(1,1.5,2),c(Ralpha1_par3_priorexp[3],Ralpha1_par3_priorlognormlow[3],Ralpha1_par3_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par3_priorexp[2],Ralpha1_par3_priorlognormlow[2],Ralpha1_par3_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(1,1.5,2),c(Ralpha1_par3_priorexp[1],Ralpha1_par3_priorlognormlow[1],Ralpha1_par3_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(3,3.5,4),c(Ralpha2_par3_priorexp[4],Ralpha2_par3_priorlognormlow[4],Ralpha2_par3_priorlognormhigh[4]),c(3,3.5,4),c(Ralpha2_par3_priorexp[3],Ralpha2_par3_priorlognormlow[3],Ralpha2_par3_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par3_priorexp[2],Ralpha2_par3_priorlognormlow[2],Ralpha2_par3_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(3,3.5,4),c(Ralpha2_par3_priorexp[1],Ralpha2_par3_priorlognormlow[1],Ralpha2_par3_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(5,5.5,6),c(Rbeta1_par3_priorexp[4],Rbeta1_par3_priorlognormlow[4],Rbeta1_par3_priorlognormhigh[4]),c(5,5.5,6),c(Rbeta1_par3_priorexp[3],Rbeta1_par3_priorlognormlow[3],Rbeta1_par3_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par3_priorexp[2],Rbeta1_par3_priorlognormlow[2],Rbeta1_par3_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(5,5.5,6),c(Rbeta1_par3_priorexp[1],Rbeta1_par3_priorlognormlow[1],Rbeta1_par3_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(7,7.5,8),c(Rbeta2_par3_priorexp[4],Rbeta2_par3_priorlognormlow[4],Rbeta2_par3_priorlognormhigh[4]),c(7,7.5,8),c(Rbeta2_par3_priorexp[3],Rbeta2_par3_priorlognormlow[3],Rbeta2_par3_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par3_priorexp[2],Rbeta2_par3_priorlognormlow[2],Rbeta2_par3_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(7,7.5,8),c(Rbeta2_par3_priorexp[1],Rbeta2_par3_priorlognormlow[1],Rbeta2_par3_priorlognormhigh[1]),col="red",cex=1)
+abline(h=1)
+
+mtext("C",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topleft',legend="Parameter set 3",bty = "n")
+mtext(par(las=1),text=c(TeX(r'($R_{\alpha 1}$)'),TeX(r'($R_{\alpha 2}$)'),TeX(r'($R_{\beta 1}$)'),TeX(r'($R_{\beta 2}$)')),
+      at=c(1.5,3.5,5.5,7.5), side=1,line=1,adj=NA,cex=1,padj=NA)
+plot(x='n',ylim=c(0,10),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+segments(lwd=5,c(1,1.5,2),c(Ralpha1_par4_priorexp[4],Ralpha1_par4_priorlognormlow[4],Ralpha1_par4_priorlognormhigh[4]),c(1,1.5,2),c(Ralpha1_par4_priorexp[3],Ralpha1_par4_priorlognormlow[3],Ralpha1_par4_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par4_priorexp[2],Ralpha1_par4_priorlognormlow[2],Ralpha1_par4_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(1,1.5,2),c(Ralpha1_par4_priorexp[1],Ralpha1_par4_priorlognormlow[1],Ralpha1_par4_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(3,3.5,4),c(Ralpha2_par4_priorexp[4],Ralpha2_par4_priorlognormlow[4],Ralpha2_par4_priorlognormhigh[4]),c(3,3.5,4),c(Ralpha2_par4_priorexp[3],Ralpha2_par4_priorlognormlow[3],Ralpha2_par4_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par4_priorexp[2],Ralpha2_par4_priorlognormlow[2],Ralpha2_par4_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(3,3.5,4),c(Ralpha2_par4_priorexp[1],Ralpha2_par4_priorlognormlow[1],Ralpha2_par4_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(5,5.5,6),c(Rbeta1_par4_priorexp[4],Rbeta1_par4_priorlognormlow[4],Rbeta1_par4_priorlognormhigh[4]),c(5,5.5,6),c(Rbeta1_par4_priorexp[3],Rbeta1_par4_priorlognormlow[3],Rbeta1_par4_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par4_priorexp[2],Rbeta1_par4_priorlognormlow[2],Rbeta1_par4_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=19,x=c(5,5.5,6),c(Rbeta1_par4_priorexp[1],Rbeta1_par4_priorlognormlow[1],Rbeta1_par4_priorlognormhigh[1]),col="red",cex=1)
+
+segments(lwd=5,c(7,7.5,8),c(Rbeta2_par4_priorexp[4],Rbeta2_par4_priorlognormlow[4],Rbeta2_par4_priorlognormhigh[4]),c(7,7.5,8),c(Rbeta2_par4_priorexp[3],Rbeta2_par4_priorlognormlow[3],Rbeta2_par4_priorlognormhigh[3]))
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par4_priorexp[2],Rbeta2_par4_priorlognormlow[2],Rbeta2_par4_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=19,x=c(7,7.5,8),c(Rbeta2_par4_priorexp[1],Rbeta2_par4_priorlognormlow[1],Rbeta2_par4_priorlognormhigh[1]),col="red",cex=1)
+abline(h=1)
+legend('topleft',legend="Parameter set 4",bty = "n")
+mtext(par(las=1),text=c(TeX(r'($R_{\alpha 1}$)'),TeX(r'($R_{\alpha 2}$)'),TeX(r'($R_{\beta 1}$)'),TeX(r'($R_{\beta 2}$)')),
+      at=c(1.5,3.5,5.5,7.5), side=1)
 mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 legend('topright',col=c("black","black","black",'red'),legend=c("prior 1","prior 2","prior 3","true value"),pch=c(21,22,23,19))
 dev.off()
@@ -827,6 +976,52 @@ points(pch=c(21,22,23),x=c(3,3.5,4),c(inv2_par4_priorexp[5],inv2_par4_priorlogno
 abline(h=0.95,lty=2,col="red")
 mtext(par(las=1),text=c("Species 1","Species 2"),
       at=c(1.5,3.5),line=1)
+mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topright',legend="Parameter set 4",bty = "n")
+dev.off()
+###
+#coverage 95% for Fujiwara invasion criteria
+pdf(file=paste("plots/compare_Rinvasion_coverage.pdf",sep=""),width=8.6,height=8.6)
+par(mfrow=c(2,2),mar=c(2,3,2,2),omi=c(0.1,0,0.5,0))
+plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par1_priorexp[5],Ralpha1_par1_priorlognormlow[5],Ralpha1_par1_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par1_priorexp[5],Ralpha2_par1_priorlognormlow[5],Ralpha2_par1_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par1_priorexp[5],Rbeta1_par1_priorlognormlow[5],Rbeta1_par1_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par1_priorexp[5],Rbeta2_par1_priorlognormlow[5],Rbeta2_par1_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+
+abline(h=0.95,lty=2,col="red")
+mtext("A",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topright',legend="Parameter set 1",bty = "n")
+mtext("95% Coverage invasion criteria", side = 3, line = 1, outer = TRUE,cex=1.2)
+
+plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par2_priorexp[5],Ralpha1_par2_priorlognormlow[5],Ralpha1_par2_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par2_priorexp[5],Ralpha2_par2_priorlognormlow[5],Ralpha2_par2_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par2_priorexp[5],Rbeta1_par2_priorlognormlow[5],Rbeta1_par2_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par2_priorexp[5],Rbeta2_par2_priorlognormlow[5],Rbeta2_par2_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+abline(h=0.95,lty=2,col="red")
+mtext("B",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topright',legend="Parameter set 2",bty = "n")
+
+plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par3_priorexp[5],Ralpha1_par3_priorlognormlow[5],Ralpha1_par3_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par3_priorexp[5],Ralpha2_par3_priorlognormlow[5],Ralpha2_par3_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par3_priorexp[5],Rbeta1_par3_priorlognormlow[5],Rbeta1_par3_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par3_priorexp[5],Rbeta2_par3_priorlognormlow[5],Rbeta2_par3_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+abline(h=0.95,lty=2,col="red")
+mtext(par(las=1),text=c(TeX(r'($R_{\alpha 1}$)'),TeX(r'($R_{\alpha 2}$)'),TeX(r'($R_{\beta 1}$)'),TeX(r'($R_{\beta 2}$)')),
+      at=c(1.5,3.5,5.5,7.5), side=1,line=1,adj=NA,cex=1,padj=NA)
+mtext("C",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend('topright',legend="Parameter set 3",bty = "n")
+
+plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
+points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par4_priorexp[5],Ralpha1_par4_priorlognormlow[5],Ralpha1_par4_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(3,3.5,4),c(Ralpha2_par4_priorexp[5],Ralpha2_par4_priorlognormlow[5],Ralpha2_par4_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par4_priorexp[5],Rbeta1_par4_priorlognormlow[5],Rbeta1_par4_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par4_priorexp[5],Rbeta2_par4_priorlognormlow[5],Rbeta2_par4_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
+abline(h=0.95,lty=2,col="red")
+mtext(par(las=1),text=c(TeX(r'($R_{\alpha 1}$)'),TeX(r'($R_{\alpha 2}$)'),TeX(r'($R_{\beta 1}$)'),TeX(r'($R_{\beta 2}$)')),
+      at=c(1.5,3.5,5.5,7.5),line=1)
 mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 legend('topright',legend="Parameter set 4",bty = "n")
 dev.off()
