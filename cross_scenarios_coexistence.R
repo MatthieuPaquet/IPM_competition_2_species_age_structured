@@ -991,7 +991,7 @@ points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par1_priorexp[5],Rbeta2_par1_priorl
 
 abline(h=0.95,lty=2,col="red")
 mtext("A",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
-legend('topright',legend="Parameter set 1",bty = "n")
+legend('bottomright',legend="Parameter set 1",bty = "n")
 mtext("95% Coverage invasion criteria", side = 3, line = 1, outer = TRUE,cex=1.2)
 
 plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
@@ -1001,7 +1001,7 @@ points(pch=c(21,22,23),x=c(5,5.5,6),c(Rbeta1_par2_priorexp[5],Rbeta1_par2_priorl
 points(pch=c(21,22,23),x=c(7,7.5,8),c(Rbeta2_par2_priorexp[5],Rbeta2_par2_priorlognormlow[5],Rbeta2_par2_priorlognormhigh[5]),col="black",bg="#2997af",cex=2)
 abline(h=0.95,lty=2,col="red")
 mtext("B",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
-legend('topright',legend="Parameter set 2",bty = "n")
+legend('bottomright',legend="Parameter set 2",bty = "n")
 
 plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
 points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par3_priorexp[5],Ralpha1_par3_priorlognormlow[5],Ralpha1_par3_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
@@ -1012,7 +1012,7 @@ abline(h=0.95,lty=2,col="red")
 mtext(par(las=1),text=c(TeX(r'($R_{\alpha 1}$)'),TeX(r'($R_{\alpha 2}$)'),TeX(r'($R_{\beta 1}$)'),TeX(r'($R_{\beta 2}$)')),
       at=c(1.5,3.5,5.5,7.5), side=1,line=1,adj=NA,cex=1,padj=NA)
 mtext("C",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
-legend('topright',legend="Parameter set 3",bty = "n")
+legend('bottomright',legend="Parameter set 3",bty = "n")
 
 plot(x='n',ylim=c(0,1),xlim=c(0.5,8.5),pch=16,xaxt='n',xlab='',ylab='')
 points(pch=c(21,22,23),x=c(1,1.5,2),c(Ralpha1_par4_priorexp[5],Ralpha1_par4_priorlognormlow[5],Ralpha1_par4_priorlognormhigh[5]),col="black",bg= "#7fa626",cex=2)
@@ -1023,7 +1023,7 @@ abline(h=0.95,lty=2,col="red")
 mtext(par(las=1),text=c(TeX(r'($R_{\alpha 1}$)'),TeX(r'($R_{\alpha 2}$)'),TeX(r'($R_{\beta 1}$)'),TeX(r'($R_{\beta 2}$)')),
       at=c(1.5,3.5,5.5,7.5),line=1)
 mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
-legend('topright',legend="Parameter set 4",bty = "n")
+legend('bottomright',legend="Parameter set 4",bty = "n")
 dev.off()
 
 #2d plots invasion criteria
