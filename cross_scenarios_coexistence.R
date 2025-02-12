@@ -384,11 +384,11 @@ mtext("A",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 legend('topleft',legend="Parameter set 1",bty = "n")
 plot(x='n',ylim=c(0,10),xlim=c(0.5,4.5),pch=16,xaxt='n',xlab='',ylab='')
 segments(lwd=5,c(1,1.5,2),c(inv1_par2_priorexp[4],inv1_par2_priorlognormlow[4],inv1_par2_priorlognormhigh[4]),c(1,1.5,2),c(inv1_par2_priorexp[3],inv1_par2_priorlognormlow[3],inv1_par2_priorlognormhigh[3]))
-points(pch=21,x=c(1,1.5,2),c(inv1_par2_priorexp[2],inv1_par2_priorlognormlow[2],inv1_par2_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(1,1.5,2),c(inv1_par2_priorexp[2],inv1_par2_priorlognormlow[2],inv1_par2_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
 points(pch=19,x=c(1,1.5,2),c(inv1_par2_priorexp[1],inv1_par2_priorlognormlow[1],inv1_par2_priorlognormhigh[1]),col="red",cex=1)
 
 segments(lwd=5,c(3,3.5,4),c(inv2_par2_priorexp[4],inv2_par2_priorlognormlow[4],inv2_par2_priorlognormhigh[4]),c(3,3.5,4),c(inv2_par2_priorexp[3],inv2_par2_priorlognormlow[3],inv2_par2_priorlognormhigh[3]))
-points(pch=22,x=c(3,3.5,4),c(inv2_par2_priorexp[2],inv2_par2_priorlognormlow[2],inv2_par2_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=c(21,22,23),x=c(3,3.5,4),c(inv2_par2_priorexp[2],inv2_par2_priorlognormlow[2],inv2_par2_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
 points(pch=19,x=c(3,3.5,4),c(inv2_par2_priorexp[1],inv2_par2_priorlognormlow[1],inv2_par2_priorlognormhigh[1]),col="red",cex=1)
 abline(h=1)
 mtext("B",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
@@ -396,11 +396,11 @@ legend('topleft',legend="Parameter set 2",bty = "n")
 mtext("Mean estimated invasion criteria", side = 3, line = 1, outer = TRUE,cex=1.2)
 plot(x='n',ylim=c(0,10),xlim=c(0.5,4.5),pch=16,xaxt='n',xlab='',ylab='')
 segments(lwd=5,c(1,1.5,2),c(inv1_par3_priorexp[4],inv1_par3_priorlognormlow[4],inv1_par3_priorlognormhigh[4]),c(1,1.5,2),c(inv1_par3_priorexp[3],inv1_par3_priorlognormlow[3],inv1_par3_priorlognormhigh[3]))
-points(pch=21,x=c(1,1.5,2),c(inv1_par3_priorexp[2],inv1_par3_priorlognormlow[2],inv1_par3_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
+points(pch=c(21,22,23),x=c(1,1.5,2),c(inv1_par3_priorexp[2],inv1_par3_priorlognormlow[2],inv1_par3_priorlognormhigh[2]),col="black",bg= "#7fa626",cex=2)
 points(pch=19,x=c(1,1.5,2),c(inv1_par3_priorexp[1],inv1_par3_priorlognormlow[1],inv1_par3_priorlognormhigh[1]),col="red",cex=1)
 
 segments(lwd=5,c(3,3.5,4),c(inv2_par3_priorexp[4],inv2_par3_priorlognormlow[4],inv2_par3_priorlognormhigh[4]),c(3,3.5,4),c(inv2_par3_priorexp[3],inv2_par3_priorlognormlow[3],inv2_par3_priorlognormhigh[3]))
-points(pch=22,x=c(3,3.5,4),c(inv2_par3_priorexp[2],inv2_par3_priorlognormlow[2],inv2_par3_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
+points(pch=c(21,22,23),x=c(3,3.5,4),c(inv2_par3_priorexp[2],inv2_par3_priorlognormlow[2],inv2_par3_priorlognormhigh[2]),col="black",bg="#2997af",cex=2)
 points(pch=19,x=c(3,3.5,4),c(inv2_par3_priorexp[1],inv2_par3_priorlognormlow[1],inv2_par3_priorlognormhigh[1]),col="red",cex=1)
 abline(h=1)
 mtext("C",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
@@ -1136,6 +1136,7 @@ mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 legend('topright',legend="Parameter set 4",bty = "n")
 dev.off()
 #plot priors and true values for alpha and beta parameters
+
 minv<-0
 maxv<-2
 freqv<-0.01
@@ -1143,18 +1144,27 @@ xx <- seq(minv,maxv,freqv)
 dpriorexp <-  dexp(xx,1)
 dpriorlognormlow <-  dlnorm(xx,0.5, 1)
 dpriorlognormhigh <-  dlnorm(xx,log(0.8)+0.05, sdlog = sqrt(0.05))
+
+par(mfrow=c(2,2),mar=c(5,5,2,2),omi=c(0.1,0,0.5,0))
 pdf(file=paste("plots/priors.pdf",sep=""),width=8.6,height=8.6)
 plot(xx,dpriorexp,ylim=c(0,2.2),xlim=c(0,2),type="l",pch=16,xlab='Parameter value',ylab='Density')
 points(xx,dpriorlognormlow,lty=2,type="l")
 points(xx,dpriorlognormhigh,lty=3,type="l")
-abline(v=c(paramvalues_1$alphs,paramvalues_1$betas,
-           paramvalues_2$alphs,paramvalues_2$betas,
-           paramvalues_3$alphs,paramvalues_3$betas,
-           paramvalues_4$alphs,paramvalues_4$betas
+abline(v=c(paramvalues_1$alphs,
+           paramvalues_2$alphs,
+           paramvalues_3$alphs,
+           paramvalues_4$alphs
 ),col="red")
 legend("topright", legend=c("Prior 1", "Prior 2", "Prior 3", "True values"),
        col=c("black", "black","black","red"), lty=c(1,2,3,1), cex=1)
-dev.off()
+plot(xx,dpriorexp,ylim=c(0,2.2),xlim=c(0,2),type="l",pch=16,xlab='Parameter value',ylab='Density')
+points(xx,dpriorlognormlow,lty=2,type="l")
+points(xx,dpriorlognormhigh,lty=3,type="l")
+abline(v=c(paramvalues_1$betas,
+           paramvalues_2$betas,
+           paramvalues_3$betas,
+           paramvalues_4$betas
+),col="red")
 #plot prior and true values for "fert1 and fert2 (\pi1 and \pi2)
 minv<-0
 maxv<-150
@@ -1164,15 +1174,14 @@ xx <- seq(minv,maxv,freqv)
 #sdprior, fert1, and fert2 are identical for all perameter sets
 fert1prior <-  dlnorm(xx,paramvalues_1$fert1priormeanlog, sd=paramvalues_1$sdprior)
 fert2prior <-  dlnorm(xx,paramvalues_1$fert2priormeanlog, sd=paramvalues_1$sdprior)
-pdf(file=paste("plots/priors_pi.pdf",sep=""),width=8.6,height=4.3)
-par(mfrow=c(1,2),mar=c(4,3,1,2),omi=c(0.1,0,0.2,0))
+
 plot(xx,fert1prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,xlab=TeX(r'($\pi_1$)'),ylab='Density')
 abline(v=paramvalues_1$fert1,col="red")
 legend("topright", legend=c("Prior", "True value"),
        col=c("black","red"), lty=c(1,1), cex=1)
+mtext("C",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 plot(xx,fert2prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,xlab=TeX(r'($\pi_2$)'),ylab='Density')
 abline(v=paramvalues_1$fert2,col="red")
-legend("topright", legend=c("Prior", "True value"),
-       col=c("black","red"), lty=c(1,1), cex=1)
+mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
 dev.off()
 sessionInfo()
