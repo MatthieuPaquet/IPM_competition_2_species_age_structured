@@ -1148,26 +1148,27 @@ dpriorlognormhigh <-  dlnorm(xx,log(0.8)+0.05, sdlog = sqrt(0.05))
 pdf(file=paste("plots/priors.pdf",sep=""),width=8.6,height=8.6)
 par(mfrow=c(2,2),mar=c(5,5,2,2),omi=c(0.1,0,0.5,0))
 
-plot(xx,dpriorexp,ylim=c(0,2.2),xlim=c(0,2),type="l",pch=16,xlab=TeX(r'($\alpha$)'),ylab='Density')
-points(xx,dpriorlognormlow,lty=2,type="l")
-points(xx,dpriorlognormhigh,lty=3,type="l")
+plot(xx,dpriorexp,ylim=c(0,2.2),xlim=c(0,2),type="l",pch=16,lwd=2,xlab=TeX(r'($\alpha$)'),ylab='Density')
+points(xx,dpriorlognormlow,lty=2,type="l",lwd=2)
+points(xx,dpriorlognormhigh,lty=3,type="l",lwd=2)
 abline(v=c(paramvalues_1$alphs,
            paramvalues_2$alphs,
            paramvalues_3$alphs,
            paramvalues_4$alphs
 ),col="red",lwd=2)
 mtext("A",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
-legend("topright", legend=c("Prior 1", "Prior 2", "Prior 3", "True values"),
-       col=c("black", "black","black","red"), lty=c(1,2,3,1), cex=1)
-plot(xx,dpriorexp,ylim=c(0,2.2),xlim=c(0,2),type="l",pch=16,xlab=TeX(r'($\beta$)'),ylab='Density')
-points(xx,dpriorlognormlow,lty=2,type="l")
-points(xx,dpriorlognormhigh,lty=3,type="l")
+
+plot(xx,dpriorexp,ylim=c(0,2.2),xlim=c(0,2),type="l",pch=16,lwd=2,xlab=TeX(r'($\beta$)'),ylab='Density')
+points(xx,dpriorlognormlow,lty=2,type="l",lwd=2)
+points(xx,dpriorlognormhigh,lty=3,type="l",lwd=2)
 abline(v=c(paramvalues_1$betas,
            paramvalues_2$betas,
            paramvalues_3$betas,
            paramvalues_4$betas
 ),col="red",lwd=2)
 mtext("B",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend("topright", legend=c("Prior 1", "Prior 2", "Prior 3", "True values"),
+       col=c("black", "black","black","red"), lty=c(1,2,3,1),lwd=2,cex=1)
 #plot prior and true values for "fert1 and fert2 (\pi1 and \pi2)
 minv<-0
 maxv<-150
@@ -1178,13 +1179,14 @@ xx <- seq(minv,maxv,freqv)
 fert1prior <-  dlnorm(xx,paramvalues_1$fert1priormeanlog, sd=paramvalues_1$sdprior)
 fert2prior <-  dlnorm(xx,paramvalues_1$fert2priormeanlog, sd=paramvalues_1$sdprior)
 
-plot(xx,fert1prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,xlab=TeX(r'($\pi_1$)'),ylab='Density')
+plot(xx,fert1prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,lwd=2,xlab=TeX(r'($\pi_1$)'),ylab='Density')
 abline(v=paramvalues_1$fert1,col="red",lwd=2)
-legend("topright", legend=c("Prior", "True value"),
-       col=c("black","red"), lty=c(1,1), cex=1)
 mtext("C",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
-plot(xx,fert2prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,xlab=TeX(r'($\pi_2$)'),ylab='Density')
+
+plot(xx,fert2prior,ylim=c(0,0.05),xlim=c(0,100),type="l",pch=16,lwd=2,xlab=TeX(r'($\pi_2$)'),ylab='Density')
 abline(v=paramvalues_1$fert2,col="red",lwd=2)
 mtext("D",side = 3, adj = 0.05, line = 1,cex=1.5,padj = 0.5)
+legend("topright", legend=c("Prior", "True value"),
+       col=c("black","red"), lty=c(1,1),lwd=2, cex=1)
 dev.off()
 sessionInfo()
