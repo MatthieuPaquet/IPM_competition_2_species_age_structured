@@ -1,10 +1,7 @@
 ##Model to simulate and fit data for a 2 species competition model based on the theoretical model from Bardon&Barraquand 2023
-#we decide to fix the maturation rate gamma=1 for both species for simplicity, and because in practice probably few real systems would use such configuration
-##built from Paquet&Barraquand 2023 code of a predator-prey model, so check carefully for mistakes.
-#here we consider the same sample size as for the previous prey species (higher sample size).
+#we decide to fix the maturation rate gamma=1 for both species for simplicity
+#and because in practice probably few real systems would use such configuration
 
-#limited to 6 simulated population to help with diagnostic of issues
-#increased sample size of CMR and nests
 setwd("/home/matpaquet/Documents/IPM_competition_2_species_age_structured")
 library(nimble)
 library(mcmcplots)
@@ -303,9 +300,6 @@ plot(1:nyears.tot, N.simul.1[nsim,], type='l', lwd=3, ylim=c(0,max(N.simul.1[nsi
 lines(1:nyears.tot, N.simul.2[nsim,], type='l', lwd=3, col='blue')
 lines(1:nyears.tot, N.simul.obs.1[nsim,], type='p', lwd=3, col='red')
 lines(1:nyears.tot, N.simul.obs.2[nsim,], type='p', lwd=3, col='blue')
-##only keep simulations where no age class goes to zero (avoid slice samplers issues)
-#list.simul<- list.simul[which(apply(N.simul.j.1[,],1,FUN=min)!=0 & apply(N.simul.a.1[,],1,FUN=min)!=0 & 
-#                                apply(N.simul.j.2[,],1,FUN=min)!=0 & apply(N.simul.a.2[,],1,FUN=min)!=0)]
 
 length(list.simul)
 #####fit an IPM
